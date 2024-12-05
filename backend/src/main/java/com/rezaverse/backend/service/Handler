@@ -3,15 +3,16 @@ package com.rezaverse.backend.service;
 import com.example.demo.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.rezaverse.backend.service.ApiService;
 
 
 @Service
 public class Handler {
 
-    private final DatabaseService databaseService;
+    private final ApiService databaseService;
 
     @Autowired
-    public Handler(DatabaseService databaseService ) {
+    public Handler(ApiService databaseService ) {
         this.databaseService = databaseService;
     }
 
