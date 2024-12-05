@@ -1,0 +1,124 @@
+package com.rezaverse.backend.service;
+
+import com.example.demo.repository.LogRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class Handler {
+
+    private final DatabaseService databaseService;
+
+    @Autowired
+    public Handler(DatabaseService databaseService ) {
+        this.databaseService = databaseService;
+    }
+
+    public String corsAnywhere() {
+        // Implement your logic here
+        return "CORS enabled";
+    }
+
+    public List<String> blogsByAvatarKey(String avatarKey) {
+        // Implement your logic here
+        return databaseService.getBlogsByAvatarKey(avatarKey);
+    }
+
+    public List<String> mostLovedRecentBlogs() {
+        // Implement your logic here
+        return databaseService.getMostLovedRecentBlogs();
+    }
+
+    public List<String> frontpageProductPreviews() {
+        // Implement your logic here
+        return databaseService.getFrontpageProductPreviews();
+    }
+
+    public List<String> discountedProductsFrontpages() {
+        // Implement your logic here
+        return databaseService.getDiscountedProductsFrontpage();
+    }
+
+    public String storeDetails(String storeID) {
+        // Implement your logic here
+        return databaseService.getStoreDetails(storeID);
+    }
+
+    public String getAvatarProduct(String requestBody) {
+        // Implement your logic here
+        return databaseService.getAvatarProduct(requestBody);
+    }
+
+    public String getProductInventoryItems(String requestBody) {
+        // Implement your logic here
+        return databaseService.getProductInventoryItems(requestBody);
+    }
+
+    public String genToken(String requestBody) {
+        // Implement your logic here
+        return databaseService.generateToken(requestBody);
+    }
+
+    public String grabProfilePicture(String requestBody) {
+        // Implement your logic here
+        return databaseService.grabProfilePicture(requestBody);
+    }
+
+    public String cancelOrder(String requestBody) {
+        // Implement your logic here
+        return databaseService.cancelOrder(requestBody);
+    }
+
+    public String deliverDropbox() {
+        // Implement your logic here
+        return databaseService.deliverDropbox();
+    }
+
+    public String completeOrder(String requestBody) {
+        // Implement your logic here
+        return databaseService.completeOrder(requestBody);
+    }
+
+    public String insertDropboxRepo(String requestBody) {
+        // Implement your logic here
+        return databaseService.insertDropboxRepo(requestBody);
+    }
+
+    public String insertDropbox(String requestBody) {
+        // Implement your logic here
+        return databaseService.insertDropbox(requestBody);
+    }
+
+    public String updateDropboxContents(String requestBody) {
+        // Implement your logic here
+        return databaseService.updateDropboxContents(requestBody);
+    }
+
+    public String uploadPicture(String pictureType, String requestBody) {
+        // Implement your logic here
+        return databaseService.uploadPicture(pictureType, requestBody);
+    }
+
+    public String deleteAnswer(String answerID) {
+        // Implement your logic here
+        return databaseService.deleteAnswer(answerID);
+    }
+
+    public String insertAnswer(String requestBody) {
+        // Implement your logic here
+        return databaseService.insertAnswer(requestBody);
+    }
+
+    public String deleteQuestion(String questionID) {
+        // Implement your logic here
+        return databaseService.deleteQuestion(questionID);
+    }
+
+    public String insertQuestion(String requestBody) {
+        // Implement your logic here
+        return databaseService.insertQuestion(requestBody);
+    }
+
+    // Other handler methods...
+}
