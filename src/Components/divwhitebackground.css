@@ -1,0 +1,29 @@
+
+.divwhitebackground_divwhitebackground {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	margin: auto;
+	width: 100%;
+	height: 100vh;
+	overflow: auto;
+	background: linear-gradient(90deg, rgba(0, 0, 0, 1.00) 0.0%, rgba(0, 0, 0, 1.00) 6.0%, rgba(255, 255, 255, 1.00) 11.0%, rgba(255, 255, 255, 1.00) 88.0%, rgba(0, 0, 0, 1.00) 94.0%, rgba(0, 0, 0, 1.00) 100.0%);
+}
+.divwhitebackground_divwhitebackground .divblackframe {
+	position: absolute;
+	left: 37.5%;
+	top: 33.022705078125px;
+	transform: translate(-50%, 0);
+	width: 1440px;
+	height: 177.97500228881836px;
+	background: rgba(0,0,0,1.00);
+}
+.divwhitebackground_divwhitebackground .divblackframe_1 {
+	position: absolute;
+	left: 37.5%;
+	top: 402.9375px;
+	transform: translate(-50%, 0);
+	width: 1440px;
+	height: 177.97500228881836px;
+	background: rgba(0,0,0,1.00);
+}

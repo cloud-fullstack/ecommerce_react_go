@@ -1,0 +1,203 @@
+
+.divglobalpadding_1_divglobalpadding {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	margin: auto;
+	width: 100%;
+	height: 100vh;
+	overflow: auto;
+	display: flex;
+	padding-top: 108.49499130249023px;
+	padding-right: 118.65752792358398px;
+	padding-bottom: 56.114994049072266px;
+	padding-left: 118.64999771118164px;
+	box-sizing: border-box;
+	justify-content: space-between;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe {
+	position: relative;
+	flex: none;
+	width: 1202.6924743652344px;
+	height: 545.8125px;
+	display: flex;
+	box-sizing: border-box;
+	justify-content: space-between;
+	align-items: center;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent {
+	position: relative;
+	flex: none;
+	width: 100%;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divleftalign {
+	position: absolute;
+	left: -283.8299560546875px;
+	top: 24.93568847614316%;
+	transform: translate(0, -50%);
+	width: 709.7999725341797px;
+	height: 187.77000045776367px;
+	display: flex;
+	padding-top: 0.15000000223517418px;
+	padding-right: 163.36497116088867px;
+	box-sizing: border-box;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divleftalign .divheadingmedium {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 100%;
+	height: 187.62000274658203px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divleftalign .divheadingmedium .Everything {
+	position: absolute;
+	left: 0px;
+	top: -0.75px;
+	width: 397.5px;
+	height: 94.5px;
+	display: flex;
+	align-items: center;
+	color: rgba(255,255,255,1.00);
+	font-family: Poppins;
+	font-size: 75.05025100708008px;
+	font-weight: 500;
+	line-height: 93.8122501373291px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divleftalign .divheadingmedium .need {
+	position: absolute;
+	left: 140.25px;
+	top: 93.06005859375px;
+	width: 212.25px;
+	height: 94.5px;
+	display: flex;
+	align-items: center;
+	color: rgba(255,255,255,1.00);
+	font-family: Poppins;
+	font-size: 75.05025100708008px;
+	font-weight: 500;
+	line-height: 93.8122501373291px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer {
+	position: absolute;
+	margin-left: 0px;
+	margin-right: 0px;
+	top: 53.95781878383248%;
+	transform: translate(0, -50%);
+	width: 709.5824890136719px;
+	height: 140.02499771118164px;
+	display: flex;
+	padding-top: 0.15000000223517418px;
+	padding-bottom: 11.100000143051147px;
+	box-sizing: border-box;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer .FormEmailForm {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 100%;
+	height: 128.77499771118164px;
+	background: linear-gradient(90deg, rgba(115, 255, 162, 1.00) 0.0%, rgba(0, 0, 0, 1.00) 100.0%);
+	border-radius: 296.6399917602539px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer .FormEmailForm .LabelEmailAddress {
+	position: absolute;
+	left: 2.969970703125px;
+	top: -2.25px;
+	width: 214.74748992919922px;
+	height: 42px;
+	display: flex;
+	align-items: center;
+	font-family: Poppins;
+	font-size: 29.6639986038208px;
+	font-weight: 700;
+	line-height: 38.563199043273926px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer .FormEmailForm .Input {
+	position: absolute;
+	margin-left: 3.9599609375px;
+	margin-right: 3.95001220703125px;
+	top: 0px;
+	width: 703.6500091552734px;
+	height: 125.8125px;
+	display: flex;
+	padding-top: 40.01249885559082px;
+	padding-right: 9.000011444091797px;
+	padding-bottom: 40.80000114440918px;
+	padding-left: 59.91749954223633px;
+	box-sizing: border-box;
+	background: linear-gradient(90deg, rgba(115, 255, 162, 1.00) 0.0%, rgba(83, 183, 117, 1.00) 15.0%, rgba(59, 131, 83, 1.00) 26.0%, rgba(38, 83, 53, 1.00) 36.0%, rgba(0, 0, 0, 1.00) 54.0%, rgba(0, 0, 0, 1.00) 100.0%);
+	border-radius: 299.6100082397461px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer .FormEmailForm .Input .divplaceholder {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 100%;
+	height: 45px;
+	display: flex;
+	padding-right: 392.4824981689453px;
+	box-sizing: border-box;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer .FormEmailForm .Input .divplaceholder .Enteryouremail {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 242.25px;
+	height: 45px;
+	display: flex;
+	align-items: center;
+	color: rgba(255,255,255,1.00);
+	font-family: Poppins;
+	font-size: 29.960623741149902px;
+	font-weight: 400;
+	line-height: 44.94093704223633px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer .FormEmailForm .Input_1 {
+	position: absolute;
+	right: 11.85769271850586px;
+	top: 18.1201171875px;
+	width: 160.93500137329102px;
+	height: 71.85789134906628%;
+	display: flex;
+	padding-top: 30.089999198913574px;
+	padding-right: 50.39250183105469px;
+	padding-bottom: 30.944998741149902px;
+	padding-left: 50.54249954223633px;
+	box-sizing: border-box;
+	justify-content: center;
+	background: linear-gradient(90deg, rgba(115, 255, 162, 1.00) 0.0%, rgba(54, 120, 76, 0.47) 40.0%, rgba(0, 0, 0, 0.00) 50.0%);
+	border-radius: 237.31501007080078px;
+	border: 4px solid rgba(115.00000074505806,255,162.00000554323196,1);
+	box-sizing: border-box;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribecontent .divsubscribecontainer .FormEmailForm .Input_1 .Send {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 60px;
+	height: 31.5px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(255,255,255,1.00);
+	font-family: Poppins;
+	font-size: 23.731199741363525px;
+	font-weight: 400;
+	line-height: 30.850576400756836px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribeimage {
+	position: relative;
+	flex: none;
+	align-self: stretch;
+	border-radius: 296.6399917602539px;
+}
+.divglobalpadding_1_divglobalpadding .divflexframe .divsubscribeimage ._64a6cdff000962bbfb4a9cc6_newsletterp500jpg {
+	position: absolute;
+	margin-left: 6.460338666700409px;
+	margin-right: -6.46146469892301px;
+	width: 487.5420979834853px;
+	height: 619.9092575041323px;
+	object-fit: cover;
+	overflow: hidden;
+}

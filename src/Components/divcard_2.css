@@ -1,0 +1,30 @@
+
+.divcard_2_divcard {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	margin: auto;
+	width: 100%;
+	height: 100vh;
+	overflow: auto;
+	border-radius: 185.11199340820312px;
+}
+.divcard_2_divcard ._64a6cdff000962bbfb4a9cd5_sc3p500jpg {
+	position: absolute;
+	margin-left: 17.02001953125px;
+	margin-right: -17.02001953125px;
+	top: 180%;
+	transform: translate(0, -50%);
+	width: 1439.495947265625px;
+	height: 1439.495947265625px;
+	object-fit: cover;
+	overflow: hidden;
+}
+.divcard_2_divcard .Star1 {
+	position: absolute;
+	left: 1132.1279296875px;
+	top: 50.4px;
+	width: 223.20000000000002px;
+	height: 230.4px;
+	background: rgba(217,217,217,1.00);
+}

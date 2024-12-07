@@ -1,0 +1,135 @@
+
+.divmt8_divmt8 {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	margin: auto;
+	width: 100%;
+	height: 100vh;
+	overflow: auto;
+}
+.divmt8_divmt8 .Heading3Subscribetoournewsletter {
+	position: absolute;
+	left: 0px;
+	top: -3.75px;
+	width: 806.25px;
+	height: 90px;
+	display: flex;
+	align-items: center;
+	color: rgba(79,34,54,1.00);
+	font-family: Space Grotesk;
+	font-size: 60px;
+	font-weight: 700;
+	line-height: 90px;
+}
+.divmt8_divmt8 .pmt4 {
+	position: absolute;
+	margin-left: 0px;
+	margin-right: 0px;
+	top: 150px;
+	width: 1440px;
+	height: 150px;
+	display: flex;
+	padding-right: 97.5px;
+	box-sizing: border-box;
+}
+.divmt8_divmt8 .pmt4 .Thelatestnewsarticlesandresourcessenttoyourinboxweekly {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 1342.5px;
+	height: 150px;
+	display: flex;
+	align-items: center;
+	color: rgba(0,0,0,1.00);
+	font-family: Space Grotesk;
+	font-size: 52.5px;
+	font-weight: 400;
+	line-height: 75px;
+}
+.divmt8_divmt8 .Form {
+	position: absolute;
+	margin-left: 0px;
+	margin-right: 0px;
+	top: 360px;
+	width: 1440px;
+	height: 157.5px;
+	display: flex;
+	padding-right: 0.000057220458984375px;
+	box-sizing: border-box;
+}
+.divmt8_divmt8 .Form .Input {
+	position: relative;
+	flex: none;
+	margin-right: 45px;
+	width: 976.3499450683594px;
+	height: 157.5px;
+	display: flex;
+	padding-top: 37.5px;
+	padding-right: 63.749942779541016px;
+	padding-bottom: 41.25px;
+	padding-left: 63.75px;
+	box-sizing: border-box;
+	background: rgba(255,255,255,1.00);
+	border-radius: 22.5px;
+	border: 1px solid rgba(209.00000274181366,213.00000250339508,219.0000021457672,1);
+	box-sizing: border-box;
+}
+.divmt8_divmt8 .Form .Input .divplaceholder {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 100%;
+	height: 78.75px;
+	display: flex;
+	padding-top: 3.75px;
+	padding-right: 376.35000228881836px;
+	box-sizing: border-box;
+}
+.divmt8_divmt8 .Form .Input .divplaceholder .Enteryouremail {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 472.5px;
+	height: 75px;
+	display: flex;
+	align-items: center;
+	color: rgba(107,114,128,1.00);
+	font-family: Space Grotesk;
+	font-size: 60px;
+	font-weight: 400;
+	line-height: 76.56000137329102px;
+}
+.divmt8_divmt8 .Form .Button {
+	position: relative;
+	flex: none;
+	margin-right: 45px;
+	width: 418.64999771118164px;
+	height: 157.5px;
+	display: flex;
+	padding-top: 30px;
+	padding-right: 66.14999771118164px;
+	padding-bottom: 37.5px;
+	padding-left: 60px;
+	box-sizing: border-box;
+	justify-content: center;
+	align-items: center;
+	background: rgba(255,229,143,1.00);
+	border-radius: 22.5px;
+}
+.divmt8_divmt8 .Form .Button .Subscribe {
+	position: relative;
+	flex: none;
+	margin-right: NaNpx;
+	width: 292.5px;
+	height: 90px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(0,0,0,1.00);
+	font-family: Space Grotesk;
+	font-size: 60px;
+	font-weight: 500;
+	line-height: 90px;
+}
