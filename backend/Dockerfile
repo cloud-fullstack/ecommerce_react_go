@@ -4,7 +4,7 @@ FROM openjdk:17-jdk-slim as builder
 # Set the working directory
 WORKDIR /app
 
-# Copy the Maven or Gradle build file and the source code
+# Copy the Maven build file and the source code
 COPY pom.xml ./
 COPY src ./src
 
