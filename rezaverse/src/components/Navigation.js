@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { FaSearch, FaShoppingCart, FaUserCircle } from 'react-icons/fa';
 
 function Navigation() {
   return (
@@ -26,3 +25,5 @@ function Navigation() {
     </nav>
   );
 }
+
+export default Navigation;
