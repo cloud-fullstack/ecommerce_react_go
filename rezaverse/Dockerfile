@@ -1,6 +1,6 @@
 # Use the official Node.js image as a build stage
-FROM node:16 AS build
-
+# Build stage
+FROM node:14 as build
 # Set the working directory
 WORKDIR /app
 
@@ -12,16 +12,6 @@ RUN npm install
 
 # Copy the rest of the application code
 COPY . .
-
-# Define build arguments
-ARG VITE_API_URL
-ARG API_URL
-ARG DOMAIN_NAME
-
-# Set environment variables for the build
-ENV VITE_API_URL=$VITE_API_URL
-ENV API_URL=$API_URL
-ENV DOMAIN_NAME=$DOMAIN_NAME
 
 # Build the application
 RUN npm run build
@@ -37,3 +27,5 @@ EXPOSE 80
 
 # Command to run the app
 CMD ["nginx", "-g", "daemon off;"]
+
+
