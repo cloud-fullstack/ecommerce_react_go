@@ -5,7 +5,10 @@ FROM node:14 as build
 WORKDIR /app
 
 # Copy package.json and package-lock.json
+# Copy files from rezaverse into /app
 COPY rezaverse/package*.json ./
+COPY rezaverse/public ./public
+COPY rezaverse/src ./src
 
 
 # Install dependencies
