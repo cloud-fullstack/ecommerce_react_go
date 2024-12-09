@@ -1,6 +1,6 @@
 # Use the official Node.js image as a build stage
-# Build stage
 FROM node:14 as build
+
 # Set the working directory
 WORKDIR /app
 
@@ -27,5 +27,3 @@ EXPOSE 80
 
 # Command to run the app
 CMD ["nginx", "-g", "daemon off;"]
-
-
