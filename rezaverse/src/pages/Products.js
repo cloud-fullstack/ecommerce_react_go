@@ -1,6 +1,6 @@
 import React from 'react';
-import { FaChevronLeft, FaChevronRight } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 function Products() {
   const products = [
@@ -21,7 +21,7 @@ function Products() {
         <h2 className="text-2xl font-semibold mb-4">Featured Products</h2>
         <div className="relative">
           <button className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md">
-            <FaChevronLeft className="text-gray-600" />
+            <FontAwesomeIcon icon={faChevronLeft} className="text-gray-600" />
           </button>
           <div className="flex overflow-x-auto space-x-4 py-4">
             {products.map((product) => (
@@ -33,7 +33,7 @@ function Products() {
             ))}
           </div>
           <button className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md">
-            <FaChevronRight className="text-gray-600" />
+            <FontAwesomeIcon icon={faChevronRight} className="text-gray-600" />
           </button>
         </div>
       </div>
