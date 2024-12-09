@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from '@fortawesome/free-solid-svg-icons';
+
 
 function Products() {
   const products = [

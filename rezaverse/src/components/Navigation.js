@@ -1,7 +1,9 @@
+// src/components/Navigation.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faShoppingCart, faUser Circle } from '@fortawesome/free-solid-svg-icons';
 
 function Navigation() {
   return (
@@ -21,8 +23,11 @@ function Navigation() {
           <FontAwesomeIcon icon={faSearch} className="absolute left-2 top-2 text-gray-400" />
         </div>
         <FontAwesomeIcon icon={faShoppingCart} />
-        <FontAwesomeIcon icon={faUserCircle} />
+        <FontAwesomeIcon icon={faUser Circle} />
       </div>
     </nav>
   );
 }
+
+// Add this line to export the Navigation component
+export default Navigation;
