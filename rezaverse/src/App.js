@@ -4,7 +4,7 @@ import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
-import FAQ from './pages/FAQ';
+import FAQ from './components/FAQ';
 import CreatorDashboard from './pages/CreatorDashboard';
 
 function App() {
