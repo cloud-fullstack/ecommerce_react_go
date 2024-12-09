@@ -29,5 +29,5 @@ function Navigation() {
   );
 }
 
-// Add this line to export the Navigation component
+// Export the Navigation component
 export default Navigation;
