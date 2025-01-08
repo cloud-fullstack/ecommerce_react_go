@@ -1,0 +1,16 @@
+# Ignore vendor directory
+back/vendor/
+
+# Ignore temporary Dockerfiles and scripts (if not needed)
+backend-Dockerfile.txt
+Dockerfile_ok.txt
+config.sh*
+
+# Ignore temporary text files
+main.txt
+main2.txt
+main_ok.txt
+main_new.txt
+main3.txt
+*.txt
+'udo journalctl -xeu kubelet'
