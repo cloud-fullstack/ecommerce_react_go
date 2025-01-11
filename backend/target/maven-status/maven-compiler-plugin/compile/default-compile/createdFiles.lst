@@ -1,8 +1,0 @@
-com\rezaverse\backend\config\AwsConfig.class
-com\rezaverse\backend\controller\ApiController.class
-com\rezaverse\backend\config\WebConfig.class
-com\rezaverse\backend\repository\LogRepository.class
-com\rezaverse\backend\service\ApiService.class
-com\rezaverse\backend\BackendApplication.class
-com\rezaverse\backend\service\Handler.class
-com\rezaverse\backend\model\LogEntry.class

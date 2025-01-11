@@ -1,0 +1,165 @@
+import React, { useState, useEffect } from "react";
+import { useStore } from "../stores/useStore"; // Zustand store for global state
+import "animate.css";
+
+const BuyDialog = ({ demoProduct = "", resendOrderID = "", onClose }) => {
+  const { authToken, aviKey, cart, setCart } = useStore();
+  const [hudStatus, setHudStatus] = useState(null);
+  const [orderID, setOrderID] = useState("");
+  const [orderSent, setOrderSent] = useState(false);
+  const [revealOrderDetails, setRevealOrderDetails] = useState(false);
+  const [error, setError] = useState(null);
+
+  const getHUDStatus = async () => {
+    if (!authToken || !aviKey) {
+      throw new Error("not signed in");
+    }
+    const res = await fetch("__API_URL__/api/heartbeat-hud/", {
+      method: "POST",
+      headers: {
+        Authorization: `${authToken}.${aviKey}`,
+      },
+      body: JSON.stringify({ avatar_key: aviKey }),
+    });
+    const json = await res.json();
+    if (json.error) {
+      throw new Error(json.message);
+    }
+    return json;
+  };
+
+  const sendOrder = async (resendOrderID) => {
+    let orderLines = cart.map((item) => ({
+      product_id: item.productID,
+      demo: item.demo,
+    }));
+
+    if (demoProduct) {
+      orderLines = [{ product_id: demoProduct.productID, demo: true }];
+    }
+
+    let route = "__API_URL__/api/create-order/";
+    let body = { avatar_buyer: aviKey, order_lines: orderLines, avatar_key: aviKey };
+
+    if (resendOrderID) {
+      route = "__API_URL__/api/resend-order/";
+      body = { avatar_buyer: aviKey, order_id: resendOrderID };
+    }
+
+    const res = await fetch(route, {
+      method: "POST",
+      headers: {
+        Authorization: `${authToken}.${aviKey}`,
+      },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json();
+    if (json.error) {
+      throw new Error(json.message);
+    }
+    setCart([]); // Clear the cart
+    return json.order_id;
+  };
+
+  const handleSendOrder = async () => {
+    setRevealOrderDetails(true);
+    try {
+      const orderID = await sendOrder(resendOrderID);
+      setOrderID(orderID);
+      setOrderSent(true);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const truePrice = (price, discountedPrice, discountActive, demo) => {
+    if (demo) return 0;
+    if (discountActive) return discountedPrice;
+    return price;
+  };
+
+  const totalPrice = cart.reduce(
+    (total, item) =>
+      total + truePrice(item.price, item.discountedPrice, item.discountActive, item.demo),
+    0
+  );
+
+  useEffect(() => {
+    getHUDStatus()
+      .then((hud) => setHudStatus(hud))
+      .catch((err) => setError(err.message));
+  }, []);
+
+  return (
+    <div className="p-4">
+      {error ? (
+        <>
+          {error === "not signed in" ? (
+            <p className="text-center">Please Sign In before purchasing.</p>
+          ) : (
+            <>
+              <p className="text-center">Error: Could not find HUD in-world.</p>
+              <p className="text-center">Are you logged in?</p>
+              <p className="text-center">Are you wearing the HUD and clicked the Register button?</p>
+              <p className="text-center mb-2">
+                Is your HUD currently accepting an order? If so, cancel the order so you can accept
+                this one.
+              </p>
+            </>
+          )}
+          <button
+            className="block mx-auto rounded-md bg-amber-100 text-amber-700 px-3 py-2 hover:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </>
+      ) : (
+        <>
+          {!revealOrderDetails ? (
+            <>
+              {resendOrderID ? (
+                <p className="text-center">Resend order to your HUD?</p>
+              ) : demoProduct ? (
+                <p className="text-center">Send this free demo to your avatar?</p>
+              ) : (
+                <p className="text-center">
+                  Send this order to HUD for L${totalPrice}?
+                </p>
+              )}
+              <button
+                className="block mx-auto rounded-md bg-[#4f2236] text-white px-3 py-2 hover:bg-[#3a1a2a] focus:outline-none focus:ring-2 focus:ring-[#4f2236] focus:ring-offset-2"
+                onClick={handleSendOrder}
+              >
+                {demoProduct ? "Send Free Demo" : resendOrderID ? "Resend Order" : "Send Order"}
+              </button>
+            </>
+          ) : (
+            <>
+              {orderSent ? (
+                <>
+                  <p className="text-center">
+                    Order <code className="bg-blue-100 text-blue-700 px-2 py-1 rounded">{orderID}</code> submitted!
+                  </p>
+                  {!demoProduct && (
+                    <p className="text-center">Pay your HUD in-world to finish purchasing.</p>
+                  )}
+                  <button
+                    className="block mx-auto rounded-md bg-amber-100 text-amber-700 px-3 py-2 hover:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                    onClick={onClose}
+                  >
+                    Close
+                  </button>
+                </>
+              ) : (
+                <p className="text-center">Submitting Order ...</p>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export default BuyDialog;
