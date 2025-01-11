@@ -10,9 +10,6 @@ COPY go.mod go.sum ./
 # Download dependencies
 RUN go mod download
 
-# Synchronize and clean up dependencies
-RUN go mod tidy
-
 # Copy the application code
 COPY . .
 
@@ -43,7 +40,6 @@ ARG REACT_APP_API_URL
 ARG DB_HOST
 ARG DB_PORT
 ARG DB_USER
-ARG DB_PASSWORD
 ARG DB_NAME
 ARG DB_SSLMODE
 
@@ -55,7 +51,6 @@ ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 ENV DB_HOST=${DB_HOST}
 ENV DB_PORT=${DB_PORT}
 ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
 ENV DB_NAME=${DB_NAME}
 ENV DB_SSLMODE=${DB_SSLMODE}
 
