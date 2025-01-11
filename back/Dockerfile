@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the Go module files and install dependencies
 COPY go.mod go.sum ./
 
-# Download dependencies
-RUN go mod download
+# Download dependencies and tidy the module
+RUN go mod tidy
 
 # Copy the application code
 COPY . .
@@ -31,7 +31,6 @@ COPY config.sh config.sh
 # Make the config.sh script executable
 RUN chmod +x config.sh
 
-# Define build-time arguments
 # Define build-time arguments
 ARG API_PORT
 ARG STATIC_PATH
