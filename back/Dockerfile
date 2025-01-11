@@ -5,15 +5,15 @@ FROM golang:1.21-alpine AS builder
 WORKDIR /app
 
 # Copy the Go module files and install dependencies
-COPY back/go.mod back/go.sum ./
+COPY go.mod go.sum ./
 
-# Download dependencies (no need to specify them individually)
+# Download dependencies
 RUN go mod download
 
-# Copy the application code (from the 'back' folder)
-COPY back/ .
+# Copy the application code
+COPY . .
 
-# Build the binary using the vendor directory
+# Build the binary
 RUN go build -o main .
 
 # Final stage for a minimal image
@@ -25,24 +25,39 @@ WORKDIR /app
 # Copy the binary from the builder stage
 COPY --from=builder /app/main .
 
-# Copy the config.sh file from the 'back' directory
-COPY back/config.sh config.sh
+# Copy the config.sh file (if used)
+COPY config.sh config.sh
 
 # Make the config.sh script executable
 RUN chmod +x config.sh
 
-# Set build-time arguments for optional variables
-ARG VITE_API_URL
-ARG API_URL
-ARG DOMAIN_NAME
+# Define build-time arguments
+# Define build-time arguments
+ARG API_PORT
+ARG STATIC_PATH
+ARG REACT_APP_DOMAIN_NAME
+ARG REACT_APP_API_URL
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_NAME
+ARG DB_SSLMODE
 
-# Set the environment variables
-ENV VITE_API_URL=${VITE_API_URL}
-ENV API_URL=${API_URL}
-ENV DOMAIN_NAME=${DOMAIN_NAME}
+# Set environment variables
+ENV API_PORT=${API_PORT}
+ENV STATIC_PATH=${STATIC_PATH}
+ENV REACT_APP_DOMAIN_NAME=${REACT_APP_DOMAIN_NAME}
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_NAME=${DB_NAME}
+ENV DB_SSLMODE=${DB_SSLMODE}
 
-# Expose the port the application will use
+# Expose the port
 EXPOSE 1323
 
-# Run the command to start the application with environment variables loaded
-CMD ["sh", "-c", ". ./config.sh && ./main"]
+# Run the application
+CMD ["./main"]

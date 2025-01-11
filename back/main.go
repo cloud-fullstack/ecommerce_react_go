@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
+
 	"shopa/db"
 	"shopa/handler"
-	"time"
+
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/cli"
 	"github.com/aws/aws-sdk-go/aws"
@@ -20,10 +22,8 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/joho/godotenv" // Import godotenv for .env file support
 )
-
-	
-
 
 var staticDir string // Define staticDir at the package level
 
@@ -31,20 +31,36 @@ func main() {
 	// Set up logging
 	log.SetHandler(cli.Default)
 
-	// Set default values and initialize router
-    port := getEnv("API_PORT", "8080")
-    staticDir := getEnv("STATIC_PATH", "/app/dist") // The directory for static files (frontend build output)
-    frontendURL := getEnv("FRONTEND_URL", "https://rezaverse-app.azurewebsites.net") // URL for the frontend
+	// Load environment variables from .env file (if it exists)
+	env := os.Getenv("ENVIRONMENT")
+	if env == "" {
+		env = "development" // Default to development
+	}
 
+	// Load the appropriate .env file
+	err := godotenv.Load(".env." + env)
+	if err != nil {
+		log.Warnf("Error loading .env.%s file: %v", env, err)
+	}
+
+// Set default values and initialize router
+port := getEnv("API_PORT", "8080") // Default port is 8080 if API_PORT is not set
+staticDir := getEnv("STATIC_PATH", "/app/dist") // Default static files directory
+frontendURL := getEnv("REACT_APP_DOMAIN_NAME", "https://rezav.gitlab.io/rezaverse") // Use REACT_APP_DOMAIN_NAME for CORS
+
+// Log the environment variables for debugging
+log.Infof("API_PORT: %s", port)
+log.Infof("STATIC_PATH: %s", staticDir)
+log.Infof("REACT_APP_DOMAIN_NAME: %s", frontendURL)
 
 	// Initialize Gin and CORS configuration
-	r := gin.New() // Only declare `r` once
+	r := gin.New()
 	r.RedirectTrailingSlash = false
 	r.Use(gin.Recovery())
 
 	// CORS Configuration
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{frontendURL} // Use `frontendURL` here
+	corsConfig.AllowOrigins = []string{frontendURL} // Use frontendURL for CORS
 	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
 	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
 	r.Use(cors.New(corsConfig))
@@ -62,32 +78,37 @@ func main() {
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", staticDir))
 	})
-	
 
-	// Database credentials
-	dbCreds := struct {
-		host     string
-		port     string
-		user     string
-		password string
-		dbName   string
-	}{
-		host:     os.Getenv("DB_HOST"),
-		port:     os.Getenv("DB_PORT"),
-		user:     os.Getenv("DB_USER"),
-		password: os.Getenv("DB_PASSWORD"),
-		dbName:   os.Getenv("DB_NAME"),
+	// Database connection
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbSSLMode := os.Getenv("DB_SSLMODE")
+
+	connString := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode,
+	)
+
+	dbPool, err := pgxpool.Connect(context.Background(), connString)
+	if err != nil {
+		log.Fatalf("Failed to connect to db: %v", err)
 	}
+	defer dbPool.Close()
 
+	// Set up logging to PostgreSQL
+	log.SetHandler(postGresLogHandler(dbPool))
+
+	// S3 configuration
 	spacesKey := os.Getenv("SPACES_ACCESS_KEY")
 	spacesSecret := os.Getenv("SPACES_SECRET_KEY")
 	if spacesKey == "" || spacesSecret == "" {
-			log.Fatal("SPACES_ACCESS_KEY or SPACES_SECRET_KEY is not set")
+		log.Fatal("SPACES_ACCESS_KEY or SPACES_SECRET_KEY is not set")
 	}
 	log.Infof("SPACES_ACCESS_KEY: %s", spacesKey)
 	log.Infof("SPACES_SECRET_KEY: %s", spacesSecret)
-
-	// ... (rest of the main function remains the same)
 
 	s3Config := &aws.Config{
 		Credentials:      credentials.NewStaticCredentials(spacesKey, spacesSecret, ""),
@@ -100,33 +121,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create S3 session: %v", err)
 	}
-
 	s3Client := s3.New(newSession)
-
-	// Construct connection string for the database
-	connString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		dbCreds.host, dbCreds.port, dbCreds.user, dbCreds.password, dbCreds.dbName, os.Getenv("DB_SSLMODE"))
-
-	// Connect to the database
-	dbPool, err := pgxpool.Connect(context.Background(), connString)
-	if err != nil {
-		log.Fatalf("Failed to connect to db: %v", err)
-	}
-	defer dbPool.Close()
-
-	// Set up logging to PostgreSQL
-	log.SetHandler(postGresLogHandler(dbPool))
-
-
-
-	// Serve Static Files (Frontend)
-	fmt.Println("Serving static content from", staticDir)
-	r.Use(static.Serve("/", static.LocalFile(staticDir, true)))
-
-	// Serve from index.html if route not found
-	r.NoRoute(func(c *gin.Context) {
-		c.File(fmt.Sprintf("%s/index.html", staticDir))
-	})
 
 	// API Routes
 	apiRouter := r.Group("/api")
@@ -202,7 +197,6 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-
 // serveSPA serves the Single Page Application for frontend routes
 func serveSPA(c *gin.Context, urlPrefix string, fs static.ServeFileSystem) {
 	fileserver := http.FileServer(fs)
@@ -255,13 +249,10 @@ func postGresLogHandler(conn *pgxpool.Pool) log.HandlerFunc {
 	}
 }
 
-
-// MiddlewareDB is a sample middleware that you can apply to the API routes.
 // MiddlewareS3 attaches the S3 client to the request context
 func MiddlewareS3(s3Client *s3.S3) gin.HandlerFunc {
-    return func(c *gin.Context) {
-        c.Set("s3Client", s3Client)
-        c.Next() // call the next handler
-    }
+	return func(c *gin.Context) {
+		c.Set("s3Client", s3Client)
+		c.Next() // call the next handler
+	}
 }
-
