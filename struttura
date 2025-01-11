@@ -1,0 +1,168 @@
+./
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── tsconfig.json               # TypeScript configuration (if using TypeScript)
+├── tailwind.config.js          # Tailwind CSS configuration
+├── postcss.config.js           # PostCSS configuration
+├── public/
+│   ├── favicon.png             # Favicon
+│   └── index.html              # HTML entry point
+├── src/
+│   ├── App.tsx                 # Main application component
+│   ├── main.tsx                # Entry point for React
+│   ├── global.css              # Global styles
+│   ├── components/             # Reusable components
+│   │   ├── NavBar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── ProductPreview.tsx
+│   │   ├── CookiePopUp.tsx
+│   │   ├── ModalParagraph.tsx
+│   │   ├── PillAccordion.tsx
+│   │   ├── QuickMenu.tsx
+│   │   └── ...                 # Other reusable components
+│   ├── pages/                  # Page-level components
+│   │   ├── Home.tsx            # Home page
+│   │   ├── AllProductPage.tsx
+│   │   ├── Auth.tsx
+│   │   ├── Cart.tsx
+│   │   ├── OrderHistory.tsx
+│   │   ├── Store.tsx
+│   │   ├── UserBlogs.tsx
+│   │   ├── SignIn.tsx
+│   │   ├── Merchant/           # Merchant-related pages
+│   │   │   ├── CreateProduct.tsx
+│   │   │   ├── CreateStore.tsx
+│   │   │   ├── Merchant.tsx
+│   │   │   └── ...             # Other merchant pages
+│   │   ├── Product/            # Product-related pages
+│   │   │   ├── Product.tsx
+│   │   │   ├── BuyDialog.tsx
+│   │   │   ├── FAQs.tsx
+│   │   │   ├── Questions.tsx
+│   │   │   └── ...             # Other product pages
+│   │   └── ...                 # Other pages
+│   ├── stores/                 # State management (e.g., Zustand, Redux)
+│   │   ├── useStore.ts         # Zustand store (or Redux slice)
+│   │   └── ...                 # Other stores
+│   ├── hooks/                  # Custom React hooks
+│   │   ├── useFetch.ts         # Custom fetch hook
+│   │   └── ...                 # Other hooks
+│   ├── utils/                  # Utility functions
+│   │   ├── api.ts              # API utility functions
+│   │   ├── helpers.ts          # Helper functions
+│   │   └── ...                 # Other utilities
+│   ├── assets/                 # Static assets (images, icons, etc.)
+│   │   ├── images/
+│   │   │   ├── navlogo.png
+│   │   │   ├── icons.jpg
+│   │   │   └── ...             # Other images
+│   │   └── ...                 # Other assets
+│   └── styles/                 # Component-specific styles (if not using Tailwind)
+│       ├── Home.module.css
+│       ├── NavBar.module.css
+│       └── ...                 # Other CSS modules
+├── vite.config.js              # Vite configuration
+└── ...                         # Other configuration files
+
+
+
+
+./.gitignore
+./file_list.txt
+./global.css
+./index.html
+./jsconfig.json
+./package-lock.json
+./package.json
+./postcss.config.cjs
+./public/favicon.png
+./src/AllProductPage.svelte
+./src/AllProductPageTest.svelte
+./src/app.css
+./src/App.svelte
+./src/Auth.svelte
+./src/Cart.svelte
+./src/clickOutside.js
+./src/cookiePopUp.svelte
+./src/DiscountedProducts.svelte
+./src/Faq.svelte
+./src/Footer.svelte
+./src/Footerold.svelte
+./src/Home.svelte
+./src/ImagePreview.svelte
+./src/main.js
+./src/Merchant/CreateFAQ.svelte
+./src/Merchant/CreateProduct.svelte
+./src/Merchant/CreateStore.svelte
+./src/Merchant/DeleteProduct.svelte
+./src/Merchant/DeleteStore.svelte
+./src/Merchant/DropboxItemSelector.svelte
+./src/Merchant/FAQInput.svelte
+./src/Merchant/Merchant.svelte
+./src/Merchant/Notification.svelte
+./src/Merchant/Perms.svelte
+./src/Merchant/PictureSelector.svelte
+./src/Merchant/SketchfabSelector.svelte
+./src/Merchant/StoreBanner.svelte
+./src/Merchant/StoreSelector.svelte
+./src/Merchant/TurntableSelector.svelte
+./src/Merchant/YoutubeSelector.svelte
+./src/ModalParagraph.svelte
+./src/MostLovedBlogs.svelte
+./src/MostLovedBlogsOld.svelte
+./src/NavBar.svelte
+./src/OrderHistory.svelte
+./src/PillAccordion.svelte
+./src/Product/Answer.svelte
+./src/Product/Answers.svelte
+./src/Product/Blog.svelte
+./src/Product/BlogLoveBtn.svelte
+./src/Product/BlogPreview.svelte
+./src/Product/BuyDialog.svelte
+./src/Product/ConfirmDeleteAnswer.svelte
+./src/Product/FAQs.svelte
+./src/Product/FlickrViewer.svelte
+./src/Product/PicturePanel.svelte
+./src/Product/Product.svelte
+./src/Product/ProductPicture.svelte
+./src/Product/Question.svelte
+./src/Product/Questions.svelte
+./src/Product/RestrictedContentNotice.svelte
+./src/Product/SketchfabViewer.svelte
+./src/Product/VimeoPlayer.svelte
+./src/Product/WriteAnswer.svelte
+./src/Product/WriteBlog.svelte
+./src/Product/WriteQuestion.svelte
+./src/Product/YoutubePlayer.svelte
+./src/ProductList.svelte
+./src/ProductPreview.svelte
+./src/Products.svelte
+./src/QuickMenu.svelte
+./src/Redeliver.svelte
+./src/signIn.svelte
+./src/SignInInstructions.svelte
+./src/Store.svelte
+./src/stores.js
+./src/test.svelte
+./src/Turntable.svelte
+./src/Upload.svelte
+./src/UserBlogs.svelte
+./src/vite-env.d.ts
+./src/WelcomeAnimation.svelte
+./store/BLACKbass.jpg
+./store/DRD_Victorian_Musicroom_harp.jpg
+./store/icons.jpg
+./store/iconsmain.jpg
+./store/navlogo.png
+./store/Piano Laura 01.jpg
+./store/The-bard's-lute.jpg
+./store/violin_add01.jpg
+./tailwind.config.cjs
+./vite.config.js
+
+
+
+
+
+

@@ -1,5 +1,7 @@
-# Ignore vendor directory
+# Ignore vendor directory (Go dependencies)
 back/vendor/
+
+.gitignore
 
 # Ignore temporary Dockerfiles and scripts (if not needed)
 back/backend-Dockerfile.txt
@@ -16,3 +18,47 @@ back/main3.txt
 back/udo journalctl -xeu kubelet
 back/udo journalctl -xeu kubelet
 back/.config.sh.swp
+
+# Ignore the entire vite-front folder
+vite-front/
+
+# Ignore the entire backend folder
+backend/
+
+# Frontend (React)
+rezaverse/node_modules/
+rezaverse/build/
+rezaverse/.env
+rezaverse/.DS_Store
+
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Miscellaneous
+*.log
+*.lock
