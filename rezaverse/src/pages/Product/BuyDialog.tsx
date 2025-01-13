@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useStore } from "../stores/useStore"; // Zustand store for global state
+import useStore from "../../stores/useStore"; // Zustand store for global state
 import "animate.css";
+import apiClient from '../../utils/api'; // Import the apiClient
 
-const BuyDialog = ({ demoProduct = "", resendOrderID = "", onClose }) => {
+interface ProductPreviewProps {
+  name?: string;
+  storeID?: string;
+  productID?: string;
+  pictureLink?: string;
+  price?: number;
+  discountedPrice?: number;
+  discountActive?: boolean;
+  demo?: boolean;
+  pricing?: boolean;
+}
+
+interface BuyDialogProps {
+  demoProduct?: ProductPreviewProps;
+  resendOrderID?: string;
+  onClose: () => void;
+}
+
+const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClose }) => {
   const { authToken, aviKey, cart, setCart } = useStore();
   const [hudStatus, setHudStatus] = useState(null);
   const [orderID, setOrderID] = useState("");
@@ -14,57 +33,65 @@ const BuyDialog = ({ demoProduct = "", resendOrderID = "", onClose }) => {
     if (!authToken || !aviKey) {
       throw new Error("not signed in");
     }
-    const res = await fetch("__API_URL__/api/heartbeat-hud/", {
-      method: "POST",
-      headers: {
-        Authorization: `${authToken}.${aviKey}`,
-      },
-      body: JSON.stringify({ avatar_key: aviKey }),
-    });
-    const json = await res.json();
-    if (json.error) {
-      throw new Error(json.message);
+    try {
+      const response = await apiClient.post("/api/heartbeat-hud/", {
+        avatar_key: aviKey,
+      });
+      if (response.data.error) {
+        throw new Error(response.data.message);
+      }
+      return response.data;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || "Failed to fetch HUD status");
     }
-    return json;
   };
 
-  const sendOrder = async (resendOrderID) => {
+  const sendOrder = async (resendOrderID: string | null) => {
     let orderLines = cart.map((item) => ({
-      product_id: item.productID,
+      product_id: item.productID, // Ensure item.productID is always a string
       demo: item.demo,
     }));
 
     if (demoProduct) {
+      // Ensure demoProduct.productID is defined
+      if (!demoProduct.productID) {
+        throw new Error("Demo product ID is missing.");
+      }
       orderLines = [{ product_id: demoProduct.productID, demo: true }];
     }
 
-    let route = "__API_URL__/api/create-order/";
-    let body = { avatar_buyer: aviKey, order_lines: orderLines, avatar_key: aviKey };
+    try {
+      let response;
+      if (resendOrderID) {
+        // For resend-order endpoint
+        response = await apiClient.post("/api/resend-order/", {
+          avatar_buyer: aviKey,
+          order_id: resendOrderID,
+        });
+      } else {
+        // For create-order endpoint
+        response = await apiClient.post("/api/create-order/", {
+          avatar_buyer: aviKey,
+          order_lines: orderLines,
+          avatar_key: aviKey,
+        });
+      }
 
-    if (resendOrderID) {
-      route = "__API_URL__/api/resend-order/";
-      body = { avatar_buyer: aviKey, order_id: resendOrderID };
-    }
+      if (response.data.error) {
+        throw new Error(response.data.message);
+      }
 
-    const res = await fetch(route, {
-      method: "POST",
-      headers: {
-        Authorization: `${authToken}.${aviKey}`,
-      },
-      body: JSON.stringify(body),
-    });
-    const json = await res.json();
-    if (json.error) {
-      throw new Error(json.message);
+      setCart([]); // Clear the cart
+      return response.data.order_id;
+    } catch (err) {
+      throw new Error(err.response?.data?.message || "Failed to send order");
     }
-    setCart([]); // Clear the cart
-    return json.order_id;
   };
 
   const handleSendOrder = async () => {
     setRevealOrderDetails(true);
     try {
-      const orderID = await sendOrder(resendOrderID);
+      const orderID = await sendOrder(resendOrderID || null);
       setOrderID(orderID);
       setOrderSent(true);
     } catch (err) {
@@ -72,7 +99,7 @@ const BuyDialog = ({ demoProduct = "", resendOrderID = "", onClose }) => {
     }
   };
 
-  const truePrice = (price, discountedPrice, discountActive, demo) => {
+  const truePrice = (price: number, discountedPrice: number, discountActive: boolean, demo: boolean) => {
     if (demo) return 0;
     if (discountActive) return discountedPrice;
     return price;

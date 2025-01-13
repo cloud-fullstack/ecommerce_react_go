@@ -4,7 +4,7 @@ import QuickMenu from "./QuickMenu";
 import  Cart  from "../pages/Cart";
 import { BlogPost } from "../types/types"; // Import the BlogPost type
 import useStore from "../stores/useStore"; // Zustand store for global state
-
+import apiClient from '../utils/api';
 
 const NavBar = () => {
   const [current, setCurrent] = useState("");
@@ -17,10 +17,10 @@ const NavBar = () => {
   // Fetch product previews
   const fetchProductPreviews = async () => {
     try {
-      const res = await fetch("__API_URL__/api/frontpage-product-previews/", {
+      const res = await apiClient.get("/api/frontpage-product-previews/", {
         method: "GET",
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.error) throw new Error(data.message);
       setSearchedProducts(data);
     } catch (err) {

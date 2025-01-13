@@ -5,9 +5,10 @@ import "slick-carousel/slick/slick-theme.css";
 import ProductPreview from "../components/ProductPreview";
 import DiscountedProducts from "../components/DiscountedProducts";
 import MostLovedBlogs from "../components/MostLovedBlogs";
-import Faq from "../components/Faq";
+//import Faq from "../components/Faq";
 import useStore from "../stores/useStore"; // Zustand store for global state
 import "animate.css";
+import apiClient from '../utils/api'; 
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -18,10 +19,10 @@ const Home = () => {
 
   const fetchProductPreviews = async () => {
     try {
-      const res = await fetch("__API_URL__/api/frontpage-product-previews/", {
+      const res = await apiClient.get("/api/frontpage-product-previews/", {
         method: "GET",
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.error) throw new Error(data.message);
       setProducts(data);
     } catch (err) {

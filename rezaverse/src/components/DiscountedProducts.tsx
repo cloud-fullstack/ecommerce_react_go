@@ -3,6 +3,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ProductPreview from "./ProductPreview";
 import "animate.css";
+import apiClient from '../utils/api';
 
 interface Product {
   product_id: string;
@@ -24,10 +25,10 @@ const DiscountedProducts = () => {
   // Fetch discounted products
   const fetchDiscountedProducts = async () => {
     try {
-      const res = await fetch("__API_URL__/api/discounted-products-frontpage/", {
+      const res = await apiClient.get("/api/discounted-products-frontpage/", {
         method: "GET",
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.error) throw new Error(data.message);
       setDiscountedProducts(data);
     } catch (err) {

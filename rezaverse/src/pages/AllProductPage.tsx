@@ -3,6 +3,7 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ProductPreview from '../components/ProductPreview';
 import { FunnelIcon } from '@heroicons/react/24/outline'; // Use the correct icon name
+import apiClient from '../utils/api';
 
 interface Product {
   product_id: string;
@@ -45,7 +46,7 @@ const Products = () => {
   }, []);
 
   const fetchProducts = async () => {
-    const res = await fetch("__API_URL__/api/frontpage-product-previews/");
+    const res = await apiClient.get("/api/frontpage-product-previews/");
     const json = await res.json();
     if (json.error) throw new Error(json.message);
   

@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useStore from "../stores/useStore"; // Import the Zustand store
 import { BlogPost } from "../types/types"; // Import the BlogPost type
+import apiClient from '../utils/api';
 
 const MostLovedBlogs = () => {
   const [mostLovedPictures, setMostLovedPictures] = useState<BlogPost[]>([]);
@@ -11,10 +12,10 @@ const MostLovedBlogs = () => {
 
   const fetchMostLovedPictures = async () => {
     try {
-      const res = await fetch("__API_URL__/api/most-loved-recent-blogs/", {
+      const res = await apiClient.get("/api/most-loved-recent-blogs/", {
         method: "GET",
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.error) throw new Error(data.message);
       setMostLovedPictures(data);
     } catch (err) {

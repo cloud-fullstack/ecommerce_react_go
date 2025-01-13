@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'animate.css';
+import apiClient from '../utils/api'; // Import the centralized API client
 
 const SignIn = () => {
   const [authToken, setAuthToken] = useState("");
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenType, setScreenType] = useState("computer");
   const navigate = useNavigate();
-
-  // Access environment variables from .env
-  const apiServerDev = process.env.REACT_APP_API_SERVER_DEV;
-  const frontendDev = process.env.REACT_APP_FRONTEND_DEV;
-  const apiServer = process.env.REACT_APP_API_SERVER;
-  const frontend = process.env.REACT_APP_FRONTEND;
 
   // Handle screen size changes
   useEffect(() => {
@@ -44,19 +39,13 @@ const SignIn = () => {
   // Handle Second Life Sign In
   const handleSecondLifeSignIn = async () => {
     try {
-      const response = await fetch(`${apiServer}/api/gen-token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          hash: "shopaTMAC#3", // Replace with actual hash logic
-          legacy_name: "user", // Replace with actual user name
-          avatar_key: "user-key" // Replace with actual avatar key
-        }),
+      const response = await apiClient.post("/api/gen-token/", {
+        hash: "shopaTMAC#3", // Replace with actual hash logic
+        legacy_name: "user", // Replace with actual user name
+        avatar_key: "user-key" // Replace with actual avatar key
       });
 
-      const data = await response.json();
+      const data = res.data;
       if (data.token) {
         setAuthToken(data.token);
         navigate("/"); // Navigate to the home page after successful sign-in
