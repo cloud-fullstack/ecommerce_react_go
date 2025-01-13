@@ -1,19 +1,22 @@
 # Use the official Node.js image as a build stage
-FROM node:14 as build
+FROM node:14 AS build
 
 # Set the working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY rezaverse/package*.json ./
-COPY rezaverse/public ./public
-COPY rezaverse/src ./src
+COPY package*.json ./
+
+# Copy the root files (App.tsx, index.tsx, etc.)
+COPY App.tsx ./
+COPY index.tsx ./
+
+# Copy the public and src directories
+COPY public ./public
+COPY src ./src
 
 # Install dependencies
 RUN npm install
-
-# Copy the rest of the application code
-COPY . .
 
 # ARG for backend API URL
 ARG REACT_APP_API_URL

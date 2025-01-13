@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import AllProductPage from './pages/AllProductPage';
 import SignIn from './pages/SignIn';
 import Cart from './pages/Cart';
+import { CSSProperties } from 'react';
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -46,7 +47,6 @@ function App() {
               <Route path="/cart" element={<Cart />} />
             </Routes>
           </div>
-          
         )}
       </div>
 
@@ -99,20 +99,18 @@ const CookiePopUp = ({ onAccept }: { onAccept: () => void }) => {
 };
 
 // Styles for the container
-const styles = {
+const styles: { [key: string]: CSSProperties } = {
   container: {
     marginTop: '70vh',
     maxWidth: '20%',
-    position: 'fixed',
+    position: 'fixed', // Explicitly typed as a valid CSS position value
     marginLeft: '40vw',
   },
   '@media (min-width: 640px) and (max-width: 767px)': {
-    container: {
-      marginTop: '70vh',
-      maxWidth: '20%',
-      position: 'fixed',
-      marginLeft: '30%',
-    },
+    marginTop: '70vh',
+    maxWidth: '20%',
+    position: 'fixed', // Explicitly typed as a valid CSS position value
+    marginLeft: '30%',
   },
 };
 
