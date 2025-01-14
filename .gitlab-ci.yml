@@ -1,6 +1,5 @@
 stages:
   - build
-  - deploy
 
 variables:
   DOCKER_REGISTRY: registry.gitlab.com
@@ -18,19 +17,11 @@ build_frontend:
     - docker:dind  # Use Docker-in-Docker
   script:
     - echo "Building frontend Docker image..."
-    - docker build \
+    - >
+      docker build \
         --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
         --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
         -t $FRONTEND_IMAGE ./rezaverse
     - docker push $FRONTEND_IMAGE
   only:
     - main  # Adjust this if you're working with a different branch like `develop`
-
-# Deploy Stage (optional)
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying to server..."
-    # Add your deployment steps here (e.g., using SSH, kubectl, etc.)
-  only:
-    - main  # Only deploy from the main branch (or adjust as needed)
