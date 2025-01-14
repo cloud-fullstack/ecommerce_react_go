@@ -1,6 +1,8 @@
 # Use an official Golang image as a build stage
 FROM golang:1.21-alpine AS builder
 
+# Set the Go module proxy
+ENV GOPROXY=https://goproxy.io,direct
 # Set the working directory
 WORKDIR /app
 
