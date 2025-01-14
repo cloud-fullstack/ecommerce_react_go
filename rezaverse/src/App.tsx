@@ -8,6 +8,7 @@ import AllProductPage from './pages/AllProductPage';
 import SignIn from './pages/SignIn';
 import Cart from './pages/Cart';
 import { CSSProperties } from 'react';
+import './App.css';
 
 function App() {
   const [showModal, setShowModal] = useState(false);
