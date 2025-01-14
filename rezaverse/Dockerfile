@@ -7,12 +7,11 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Copy the root files (App.tsx, index.tsx, etc.)
-COPY App.tsx ./
-COPY index.tsx ./
+# Copy the root configuration files
+COPY postcss.config.js ./
+COPY tailwind.config.js ./
 
-# Copy the public and src directories
-COPY public ./public
+# Copy the src directory (including App.tsx, index.tsx, etc.)
 COPY src ./src
 
 # Install dependencies
