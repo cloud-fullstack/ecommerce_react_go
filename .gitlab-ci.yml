@@ -13,11 +13,15 @@ before_script:
 # Build Frontend Docker Image
 build_frontend:
   stage: build
+  image: docker:latest  # Use the Docker image
+  services:
+    - docker:dind  # Use Docker-in-Docker
   script:
     - echo "Building frontend Docker image..."
-    - docker build -f frontend/Dockerfile --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
-                                     --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-                                     -t $FRONTEND_IMAGE frontend/
+    - docker build \
+        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
+        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
+        -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
   only:
     - main  # Adjust this if you're working with a different branch like `develop`
