@@ -11,6 +11,9 @@ COPY package*.json ./
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
+# Copy the public directory
+COPY public ./public
+
 # Copy the src directory (including App.tsx, index.tsx, etc.)
 COPY src ./src
 
