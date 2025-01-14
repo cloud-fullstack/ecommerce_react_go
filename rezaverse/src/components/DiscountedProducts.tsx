@@ -24,6 +24,7 @@ const DiscountedProducts = () => {
 
   // Fetch discounted products
   const fetchDiscountedProducts = async () => {
+    setLoading(true);
     try {
       const res = await apiClient.get("/api/discounted-products-frontpage/", {
         method: "GET",
@@ -32,7 +33,12 @@ const DiscountedProducts = () => {
       if (data.error) throw new Error(data.message);
       setDiscountedProducts(data);
     } catch (err) {
-      setError(err.message);
+      // Handle the error safely
+      if (err instanceof Error) {
+        setError(err.message); // Now TypeScript knows `err` is an Error object
+      } else {
+        setError("An unknown error occurred"); // Handle non-Error types
+      }
     } finally {
       setLoading(false);
     }

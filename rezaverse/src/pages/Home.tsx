@@ -5,35 +5,63 @@ import "slick-carousel/slick/slick-theme.css";
 import ProductPreview from "../components/ProductPreview";
 import DiscountedProducts from "../components/DiscountedProducts";
 import MostLovedBlogs from "../components/MostLovedBlogs";
-//import Faq from "../components/Faq";
+import Faq from "../components/Faq";
 import useStore from "../stores/useStore"; // Zustand store for global state
 import "animate.css";
-import apiClient from '../utils/api'; 
+import apiClient from '../utils/api';
+
+// Define the Product interface
+interface Product {
+  product_id: string;
+  product_name: string;
+  store_id: string;
+  picture_link: string;
+  price: number;
+  discounted_price: number; // Keep this as is
+  discounted: boolean;
+}
+
+// Define the API response structure (if it includes an error field)
+interface ApiResponse {
+  data: Product[]; // Array of products
+  error?: string; // Optional error field
+}
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]); // Typed products state
   const [animationLoaded, setAnimationLoaded] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [slidesToShow, setSlidesToShow] = useState(3);
   const { authToken } = useStore();
 
+  // Fetch product previews from the API
   const fetchProductPreviews = async () => {
     try {
-      const res = await apiClient.get("/api/frontpage-product-previews/", {
+      const res = await apiClient.get<ApiResponse>("/api/frontpage-product-previews/", {
         method: "GET",
       });
-      const data = res.data;
-      if (data.error) throw new Error(data.message);
-      setProducts(data);
+      const { data, error } = res.data; // Destructure the response
+
+      if (error) {
+        throw new Error(error); // Throw an error if the API returns an error
+      }
+
+      setProducts(data); // Set the products if there's no error
     } catch (err) {
-      console.error(err);
+      if (err instanceof Error) {
+        console.error(err.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
     }
   };
 
+  // Fetch products on component mount
   useEffect(() => {
     fetchProductPreviews();
   }, []);
 
+  // Handle screen size changes
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
@@ -48,6 +76,7 @@ const Home = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [screenWidth]);
 
+  // Handle animation on page load
   useEffect(() => {
     const currentPath = window.location.pathname;
     const homeDiv = document.getElementById("homeDiv");
@@ -66,6 +95,7 @@ const Home = () => {
     }
   }, [animationLoaded]);
 
+  // Slider settings
   const settings = {
     dots: false,
     infinite: true,
@@ -114,8 +144,8 @@ const Home = () => {
                     productID={product.product_id}
                     pictureLink={product.picture_link}
                     price={product.price}
-                    discount_price={product.discounted_price}
-                    discounted={product.discounted}
+                    discountedPrice={product.discounted_price} // Updated prop name
+                    discountActive={product.discounted}
                     index={i}
                   />
                 </div>

@@ -36,19 +36,15 @@ function App() {
 
   return (
     <main>
+      <NavBar />
       <div className="content">
-        {showModal && (
-          <div className="modal">
-            <button onClick={closeModal}>Close Modal</button>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/signIn" element={<SignIn />} />
-              <Route path="/products" element={<AllProductPage />} />
-              <Route path="/store/:storeID/:productID" element={<ProductPreview />} />
-              <Route path="/cart" element={<Cart />} />
-            </Routes>
-          </div>
-        )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signIn" element={<SignIn />} />
+          <Route path="/products" element={<AllProductPage />} />
+          <Route path="/store/:storeID/:productID" element={<ProductPreview />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
       </div>
 
       <button onClick={openModal}>Open Modal</button>
