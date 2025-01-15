@@ -22,6 +22,7 @@ build_frontend:
         --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
         --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
         -t $FRONTEND_IMAGE .
+    - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
   only:
     - main  # Adjust this if you're working with a different branch like `develop`
