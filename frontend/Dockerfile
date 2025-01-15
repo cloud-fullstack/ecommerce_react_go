@@ -7,6 +7,9 @@ WORKDIR /frontend
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+# Clean and reinstall dependencies
+RUN rm -rf node_modules && npm install
+
 # Copy the root configuration files
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
@@ -17,9 +20,6 @@ COPY public ./public
 
 # Copy the src directory (including App.tsx, index.tsx, etc.)
 COPY src ./src
-
-# Install dependencies
-RUN npm install
 
 # ARG for backend API URL
 ARG REACT_APP_API_URL
