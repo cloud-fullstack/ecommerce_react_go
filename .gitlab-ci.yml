@@ -17,7 +17,6 @@ build_frontend:
     - docker:dind  # Use Docker-in-Docker
   script:
     - echo "Building frontend Docker image..."
-    - cd rezaverse  # Navigate to the rezaverse directory
     - >
       docker build \
         --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
