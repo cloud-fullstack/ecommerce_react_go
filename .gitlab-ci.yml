@@ -5,11 +5,6 @@ stages:
 variables:
   DOCKER_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $DOCKER_REGISTRY/rezav/rezaverse/frontend
-  BACKEND_IMAGE: $DOCKER_REGISTRY/rezav/rezaverse/backend
-
-before_script:
-  - echo "Setting up Docker..."
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
 
 # Build Frontend
 build_frontend:
@@ -27,40 +22,26 @@ build_frontend:
   only:
     - main
 
-# Build Backend
-build_backend:
+# Build and Push Docker Image
+build_docker_image:
   stage: build
-  image: golang:1.21  # Use Go image for building the backend
-  script:
-    - echo "Building Go backend..."
-    - cd backend
-    - go build -o rezaverse .
-    - cd ..
-  artifacts:
-    paths:
-      - backend/rezaverse  # Save the compiled Go binary
-  only:
-    - main
-
-# Build and Push Docker Images
-build_docker_images:
-  stage: build
-  image: docker:latest
+  image: docker:latest  # Use Docker image for Docker commands
   services:
-    - docker:dind
+    - docker:dind  # Enable Docker-in-Docker
   script:
-    - echo "Building and pushing Docker images..."
+    - echo "Logging in to Docker Registry..."
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
+    - echo "Building Docker image..."
     - docker build -t $FRONTEND_IMAGE -f frontend/Dockerfile .
-    - docker build -t $BACKEND_IMAGE -f backend/Dockerfile .
+    - echo "Pushing Docker image..."
     - docker push $FRONTEND_IMAGE
-    - docker push $BACKEND_IMAGE
   only:
     - main
 
 # Deploy to GitLab Pages (Optional)
 pages:
   stage: deploy
-  image: alpine:latest
+  image: alpine:latest  # Use a lightweight image for deployment
   script:
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir public
@@ -68,17 +49,5 @@ pages:
   artifacts:
     paths:
       - public
-  only:
-    - main
-
-# Deploy Backend (Optional)
-deploy_backend:
-  stage: deploy
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - echo "Deploying backend..."
-    - docker run -d --name rezaverse-backend -p 8080:8080 $BACKEND_IMAGE
   only:
     - main
