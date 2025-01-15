@@ -1,8 +1,8 @@
 # Use the official Node.js image as a build stage
 FROM node:14 AS build
 
-# Set the working directory
-WORKDIR /app
+# Set the working directory to /app/rezaverse
+WORKDIR /app/rezaverse
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -16,6 +16,9 @@ COPY public ./public
 
 # Copy the src directory (including App.tsx, index.tsx, etc.)
 COPY src ./src
+
+# Debug: List files in the working directory
+RUN ls -R /app/rezaverse
 
 # Install dependencies
 RUN npm install
@@ -35,7 +38,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy the built app from the previous stage
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/rezaverse/build /usr/share/nginx/html
 
 # Expose the port the app runs on
 EXPOSE 80

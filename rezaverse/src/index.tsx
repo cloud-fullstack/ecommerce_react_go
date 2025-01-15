@@ -10,7 +10,7 @@ const rootElement = document.getElementById('root');
 
 // Check if the root element exists
 if (!rootElement) {
-  throw new Error("Root element with ID 'root' not found in the DOM.");
+  throw new Error("Root element with ID p'root' not found in the DOM.");
 }
 
 // Create the root and render the app
