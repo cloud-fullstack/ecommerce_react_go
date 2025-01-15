@@ -18,15 +18,16 @@ interface Product {
 const DiscountedProducts = () => {
   const [discountedProducts, setDiscountedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null); // Allow `null` or `string`
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [numberOfCart, setNumberOfCart] = useState(4);
 
   // Fetch discounted products
   const fetchDiscountedProducts = async () => {
     setLoading(true);
+    let res; // Declare `res` outside the `try` block
     try {
-      const res = await apiClient.get("/api/discounted-products-frontpage/", {
+      res = await apiClient.get("/api/discounted-products-frontpage/", {
         method: "GET",
       });
       const data = res.data;
@@ -39,6 +40,7 @@ const DiscountedProducts = () => {
       } else {
         setError("An unknown error occurred"); // Handle non-Error types
       }
+    
     } finally {
       setLoading(false);
     }
@@ -56,6 +58,7 @@ const DiscountedProducts = () => {
   // Fetch data on mount
   useEffect(() => {
     fetchDiscountedProducts();
+
   }, []);
 
   // Add event listener for screen size changes
@@ -87,20 +90,25 @@ const DiscountedProducts = () => {
           centerMode
           centerSlidePercentage={100 / numberOfCart}
         >
-          {discountedProducts.map((product, i) => (
-            <div key={product.product_id} className="product">
-              <ProductPreview
-                name={product.product_name}
-                storeID={product.store_id}
-                productID={product.product_id}
-                pictureLink={product.picture_link}
-                price={product.price}
-                discount_price={product.discounted_price}
-                discounted={product.discounted}
-                index={i}
-              />
-            </div>
-          ))}
+          {discountedProducts.map((product, i) => {
+            // Map API data to the expected prop names
+            const productProps = {
+              name: product.product_name,
+              storeID: product.store_id,
+              productID: product.product_id,
+              pictureLink: product.picture_link,
+              price: product.price,
+              discountedPrice: product.discounted_price, // Map `discounted_price` to `discountedPrice`
+              discountActive: product.discounted, // Map `discounted` to `discountActive`
+              index: i,
+            };
+
+            return (
+              <div key={product.product_id} className="product">
+                <ProductPreview {...productProps} />
+              </div>
+            );
+          })}
         </Carousel>
       ) : (
         <p>No products available!</p>

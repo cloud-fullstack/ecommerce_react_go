@@ -1,18 +1,26 @@
-// src/components/NavBar.tsx
 import React, { useState, useEffect, useRef } from "react";
 import QuickMenu from "./QuickMenu";
-import  Cart  from "../pages/Cart";
+import Cart from "../pages/Cart";
 import { BlogPost } from "../types/types"; // Import the BlogPost type
 import useStore from "../stores/useStore"; // Zustand store for global state
 import apiClient from '../utils/api';
+
+// Define the Product type
+interface Product {
+  product_id: string;
+  product_name: string;
+  store_id: string;
+  picture_link: string;
+  store_name: string;
+}
 
 const NavBar = () => {
   const [current, setCurrent] = useState("");
   const [show, setShow] = useState(false); // Mobile menu state
   const [searchProductName, setSearchProductName] = useState("");
-  const [searchedProducts, setSearchedProducts] = useState([]);
-  const { animationLoaded, aviLegacyName } = useStore(); // Zustand store for global state
-  const menuRef = useRef(null); // Ref for mobile menu
+  const [searchedProducts, setSearchedProducts] = useState<Product[]>([]); // Use the Product type
+  const { animationLoaded, aviLegacyName, setAnimationLoaded } = useStore(); // Destructure setAnimationLoaded
+  const menuRef = useRef<HTMLElement | null>(null); // Ref for mobile menu with explicit type
 
   // Fetch product previews
   const fetchProductPreviews = async () => {
@@ -29,7 +37,7 @@ const NavBar = () => {
   };
 
   // Handle search filter
-  const searchNavbarFilter = (arr, searchTerm) => {
+  const searchNavbarFilter = (arr: Product[], searchTerm: string) => {
     searchTerm = searchTerm.toLowerCase();
     return arr.filter((product) => {
       return (
@@ -40,14 +48,14 @@ const NavBar = () => {
   };
 
   // Handle mobile menu outside click
-  const handleOutsideClick = (event) => {
-    if (show && !menuRef.current?.contains(event.target)) {
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (show && !menuRef.current?.contains(event.target as Node)) {
       setShow(false);
     }
   };
 
   // Handle escape key press
-  const handleEscape = (event) => {
+  const handleEscape = (event: KeyboardEvent) => {
     if (show && event.key === "Escape") {
       setShow(false);
     }
@@ -84,7 +92,7 @@ const NavBar = () => {
           navElement.classList.add("animate__fadeIn");
           navElement.style.display = "";
         }
-        setAnimationLoaded(true);
+        setAnimationLoaded(true); // Use setAnimationLoaded from the store
       }, 4000);
     }
 
@@ -98,7 +106,7 @@ const NavBar = () => {
     } else if (currentPath === "/products") {
       document.getElementById("PL")?.classList.add("navLink");
     }
-  }, [animationLoaded]);
+  }, [animationLoaded, setAnimationLoaded]); // Add setAnimationLoaded to dependencies
 
   return (
     <nav className="bgLight shadow sticky top-0 z-50" style={{ display: "none" }} id="navv">
@@ -314,7 +322,7 @@ const NavBar = () => {
 
       {/* Mobile Menu */}
       {show && (
-        <div className="md:hidden absolute bg-black mobileMenuDiv" id="mobile-menu">
+        <div ref={menuRef as React.RefObject<HTMLDivElement>} className="md:hidden absolute bg-black mobileMenuDiv" id="mobile-menu">
           <div className="space-y-1 pt-2 pb-3">
             <a
               href="/"

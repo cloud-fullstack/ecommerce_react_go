@@ -46,17 +46,21 @@ const Products = () => {
   }, []);
 
   const fetchProducts = async () => {
-    const res = await apiClient.get("/api/frontpage-product-previews/");
-    const json = await res.json();
-    if (json.error) throw new Error(json.message);
+    try {
+      const res = await apiClient.get("/api/frontpage-product-previews/");
+      const data = res.data; // Use `res.data` instead of `res.json()`
+      if (data.error) throw new Error(data.message);
   
-    // Ensure `discounted` is always a boolean
-    const products = json.map((product: any) => ({
-      ...product,
-      discounted: product.discounted || false, // Default to `false` if `discounted` is missing
-    }));
+      // Ensure `discounted` is always a boolean
+      const products = data.map((product: any) => ({
+        ...product,
+        discounted: product.discounted || false, // Default to `false` if `discounted` is missing
+      }));
   
-    setListOfProducts(products);
+      setListOfProducts(products);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+    }
   };
 
   useEffect(() => {
@@ -130,16 +134,16 @@ const Products = () => {
               {listOfProducts.length > 0 ? (
                 searchFilterCategory(listOfProducts, searchProductName, selectedFilter).map((product, index) => (
                   <ProductPreview
-                    key={product.product_id}
-                    productID={product.product_id}
-                    storeID={product.store_id}
-                    name={product.product_name} // Corrected prop name
-                    pictureLink={product.picture_link}
-                    price={product.price}
-                    discount_price={product.discounted_price || product.price} // Fallback to `price` if `discounted_price` is undefined
-                    discounted={product.discounted}
-                    index={index} // Add `index` prop
-                  />
+                  key={product.product_id}
+                  productID={product.product_id}
+                  storeID={product.store_id}
+                  name={product.product_name}
+                  pictureLink={product.picture_link}
+                  price={product.price}
+                  discountedPrice={product.discounted_price || product.price} // Correct prop name
+                  discountActive={product.discounted} // Correct prop name
+                  index={index}
+                />
                 ))
               ) : (
                 <p>No products available!</p>

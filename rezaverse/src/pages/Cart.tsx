@@ -13,13 +13,18 @@ const Cart = () => {
     // Example: open(BuyDialog);
   };
 
-  const removeItem = (index) => {
+  const removeItem = (index: number) => {
     const newCart = [...cart];
     newCart.splice(index, 1);
     setCart(newCart);
   };
 
-  const truePrice = (price, discountedPrice, discountActive, demo) => {
+  const truePrice = (
+    price: number,
+    discountedPrice: number,
+    discountActive: boolean,
+    demo: boolean
+  ): number => {
     if (demo) return 0;
     if (discountActive) return discountedPrice;
     return price;

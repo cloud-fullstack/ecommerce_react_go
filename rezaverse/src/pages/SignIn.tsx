@@ -44,8 +44,8 @@ const SignIn = () => {
         legacy_name: "user", // Replace with actual user name
         avatar_key: "user-key" // Replace with actual avatar key
       });
-
-      const data = res.data;
+  
+      const data = response.data; // Use `response` instead of `res`
       if (data.token) {
         setAuthToken(data.token);
         navigate("/"); // Navigate to the home page after successful sign-in

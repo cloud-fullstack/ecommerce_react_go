@@ -6,8 +6,8 @@ interface ProductPreviewProps {
   productID?: string;
   pictureLink?: string;
   price?: number;
-  discountedPrice?: number; // Correct prop name
-  discountActive?: boolean;
+  discountedPrice?: number; // Expected prop name
+  discountActive?: boolean; // Expected prop name
   demo?: boolean;
   pricing?: boolean;
   index?: number;

@@ -27,7 +27,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
   const [orderID, setOrderID] = useState("");
   const [orderSent, setOrderSent] = useState(false);
   const [revealOrderDetails, setRevealOrderDetails] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null); // Allow `null` or `string`
 
   const getHUDStatus = async () => {
     if (!authToken || !aviKey) {
@@ -42,7 +42,13 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
       }
       return response.data;
     } catch (err) {
-      throw new Error(err.response?.data?.message || "Failed to fetch HUD status");
+      // Narrow down the type of `err` to `Error` or `AxiosError`
+      if (err instanceof Error) {
+        throw new Error(
+          (err as any).response?.data?.message || "Failed to fetch HUD status"
+        );
+      }
+      throw new Error("Failed to fetch HUD status");
     }
   };
 
@@ -84,7 +90,13 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
       setCart([]); // Clear the cart
       return response.data.order_id;
     } catch (err) {
-      throw new Error(err.response?.data?.message || "Failed to send order");
+      // Narrow down the type of `err` to `Error` or `AxiosError`
+      if (err instanceof Error) {
+        throw new Error(
+          (err as any).response?.data?.message || "Failed to send order"
+        );
+      }
+      throw new Error("Failed to send order");
     }
   };
 
@@ -95,10 +107,15 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
       setOrderID(orderID);
       setOrderSent(true);
     } catch (err) {
-      setError(err.message);
+      // Narrow down the type of `err` to `Error`
+      if (err instanceof Error) {
+        setError(err.message); // Use the error message directly
+      } else {
+        setError("An unknown error occurred"); // Handle non-Error types
+      }
     }
   };
-
+  
   const truePrice = (price: number, discountedPrice: number, discountActive: boolean, demo: boolean) => {
     if (demo) return 0;
     if (discountActive) return discountedPrice;
@@ -114,7 +131,15 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
   useEffect(() => {
     getHUDStatus()
       .then((hud) => setHudStatus(hud))
-      .catch((err) => setError(err.message));
+      .catch((err) => {
+        console.error("Error fetching HUD status:", err);
+        // Handle the error here
+        if (err instanceof Error) {
+          setError(err.message); // Example: Set an error state
+        } else {
+          setError("An unknown error occurred");
+        }
+      });
   }, []);
 
   return (

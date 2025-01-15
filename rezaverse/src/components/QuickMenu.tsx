@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import useStore from "../stores/useStore";
 import SignInInstructions from "./SignInInstructions"; // Assuming you have this component
-
+import apiClient from '../utils/api';
 const QuickMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [hudStatus, setHudStatus] = useState("");
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement | null>(null); // Add type annotation for menuRef
 
   const {
     authToken,
@@ -22,13 +22,13 @@ const QuickMenu = () => {
 
   // Handle outside click and escape key press
   useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (showMenu && !menuRef.current?.contains(event.target)) {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (showMenu && !menuRef.current?.contains(event.target as Node)) {
         setShowMenu(false);
       }
     };
 
-    const handleEscape = (event) => {
+    const handleEscape = (event: KeyboardEvent) => {
       if (showMenu && event.key === "Escape") {
         setShowMenu(false);
       }
@@ -47,28 +47,36 @@ const QuickMenu = () => {
   useEffect(() => {
     if (showMenu) {
       setHudStatus("Fetching HUD status ...");
-      fetch("__API_URL__/api/heartbeat-hud/", {
-        method: "POST",
-        headers: {
-          Authorization: `${authToken}.${aviKey}`,
-        },
-        body: JSON.stringify({ avatar_key: aviKey }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
+  
+      // Use apiClient.post for POST requests
+      apiClient
+        .post(
+          "/api/heartbeat-hud/", // Endpoint URL
+          { avatar_key: aviKey }, // Request body
+          {
+            headers: {
+              Authorization: `${authToken}.${aviKey}`, // Headers
+            },
+          }
+        )
+        .then((res) => {
+          const data = res.data;
           if (data.error) {
-            setHudStatus(data.message === "failed to heartbeat HUD" ? "HUD not worn. Get HUD at: xxx" : `HUD not worn: ${data.message}`);
+            setHudStatus(
+              data.message === "failed to heartbeat HUD"
+                ? "HUD not worn. Get HUD at: xxx"
+                : `HUD not worn: ${data.message}`
+            );
           } else {
             setHudStatus("HUD is worn.");
           }
         })
-        .catch((error) => {
-          console.error("Error fetching HUD status:", error);
+        .catch((err) => {
+          console.error("Error fetching HUD status:", err);
           setHudStatus("Error fetching HUD status.");
         });
     }
   }, [showMenu, authToken, aviKey]);
-
   // Sign out function
   const signOut = () => {
     setAuthToken("");

@@ -82,11 +82,11 @@ const MostLovedBlogs = () => {
                         <div className="mt-6 flex items-center">
                           <div className="flex-shrink-0">
                             <a href={`/blog/${pic.blog_post_id}/`}>
-                              <img
-                                className="h-10 w-10 rounded-full"
-                                src={profilePicture}
-                                alt={pic.author_name}
-                              />
+                            <img
+                                  className="h-10 w-10 rounded-full"
+                                  src={profilePicture || "https://via.placeholder.com/150"} // Fallback to a placeholder image
+                                  alt={pic.author_name}
+                                />
                             </a>
                           </div>
                           <div className="ml-3">

@@ -17,8 +17,8 @@ interface Product {
   store_id: string;
   picture_link: string;
   price: number;
-  discounted_price: number; // Keep this as is
-  discounted: boolean;
+  discounted_price: number; // API uses `discounted_price`
+  discounted: boolean; // API uses `discounted`
 }
 
 // Define the API response structure (if it includes an error field)
@@ -29,7 +29,7 @@ interface ApiResponse {
 
 const Home = () => {
   const [products, setProducts] = useState<Product[]>([]); // Typed products state
-  const [animationLoaded, setAnimationLoaded] = useState(false);
+  const { animationLoaded, setAnimationLoaded } = useStore(); // Destructure setAnimationLoaded
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [slidesToShow, setSlidesToShow] = useState(3);
   const { authToken } = useStore();
@@ -87,13 +87,13 @@ const Home = () => {
           homeDiv.classList.add("animate__fadeIn");
           homeDiv.style.display = "block";
         }
-        setAnimationLoaded(true);
+        setAnimationLoaded(true); // Use setAnimationLoaded from the store
       }, 4000);
     } else if (homeDiv) {
       homeDiv.classList.add("animate__fadeIn");
       homeDiv.style.display = "block";
     }
-  }, [animationLoaded]);
+  }, [animationLoaded, setAnimationLoaded]); // Add setAnimationLoaded to dependencies
 
   // Slider settings
   const settings = {
@@ -136,20 +136,25 @@ const Home = () => {
 
           {products.length > 0 ? (
             <Slider {...settings}>
-              {products.map((product, i) => (
-                <div key={i} className="product">
-                  <ProductPreview
-                    name={product.product_name}
-                    storeID={product.store_id}
-                    productID={product.product_id}
-                    pictureLink={product.picture_link}
-                    price={product.price}
-                    discountedPrice={product.discounted_price} // Updated prop name
-                    discountActive={product.discounted}
-                    index={i}
-                  />
-                </div>
-              ))}
+              {products.map((product, i) => {
+                // Map API data to the expected prop names
+                const productProps = {
+                  name: product.product_name,
+                  storeID: product.store_id,
+                  productID: product.product_id,
+                  pictureLink: product.picture_link,
+                  price: product.price,
+                  discountedPrice: product.discounted_price, // Map `discounted_price` to `discountedPrice`
+                  discountActive: product.discounted, // Map `discounted` to `discountActive`
+                  index: i,
+                };
+
+                return (
+                  <div key={i} className="product">
+                    <ProductPreview {...productProps} />
+                  </div>
+                );
+              })}
             </Slider>
           ) : (
             <p>No products available!</p>
