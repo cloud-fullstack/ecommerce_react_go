@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy  # Add this new stage
 
 variables:
   DOCKER_REGISTRY: registry.gitlab.com
@@ -24,6 +25,9 @@ build_frontend:
         -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
+  only:
+    - main  # Adjust this if you're working with a different branch like `develop`
+
 # Deploy to GitLab Pages
 pages:
   stage: deploy
