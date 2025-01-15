@@ -24,5 +24,14 @@ build_frontend:
         -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
+# Deploy to GitLab Pages
+pages:
+  stage: deploy
+  script:
+    - mkdir public
+    - cp -r frontend/build/* public/
+  artifacts:
+    paths:
+      - public
   only:
-    - main  # Adjust this if you're working with a different branch like `develop`
+    - main
