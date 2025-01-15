@@ -3,7 +3,7 @@ stages:
 
 variables:
   DOCKER_REGISTRY: registry.gitlab.com
-  FRONTEND_IMAGE: $DOCKER_REGISTRY/rezav/rezaverse/rezaverse
+  FRONTEND_IMAGE: $DOCKER_REGISTRY/rezav/rezaverse/frontend
 
 before_script:
   - echo "Setting up Docker..."
@@ -21,7 +21,7 @@ build_frontend:
       docker build \
         --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
         --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE .
+        -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
   only:
