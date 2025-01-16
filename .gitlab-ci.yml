@@ -1,3 +1,14 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+before_script:
+  - echo "Setting up Docker and Node.js..."
+  - apk add --no-cache nodejs npm  # Install Node.js and npm
+  - npm install -g npm@latest      # Update npm to the latest version
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
+
 stages:
   - build
   - deploy
@@ -6,16 +17,8 @@ variables:
   DOCKER_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $DOCKER_REGISTRY/rezav/rezaverse/frontend
 
-before_script:
-  - echo "Setting up Docker..."
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
-
-# Build Frontend Docker Image
 build_frontend:
   stage: build
-  image: node:14  # Use Node.js image for React
-  services:
-    - docker:dind  # Use Docker-in-Docker
   script:
     - echo "Installing dependencies..."
     - npm install
@@ -30,16 +33,15 @@ build_frontend:
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
 
-# Deploy to GitLab Pages
 pages:
   stage: deploy
-  image: alpine:latest  # Use a lightweight image for deployment
+  image: alpine:latest
   script:
     - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public  # Ensure the public directory exists
-    - cp -r frontend/build/* public/  # Copy built files to public/
+    - mkdir -p public
+    - cp -r frontend/build/* public/
   artifacts:
     paths:
-      - public  # GitLab Pages serves the contents of the public folder
+      - public
   only:
-    - main  # Adjust this if you're working with a different branch like `develop`
+    - main
