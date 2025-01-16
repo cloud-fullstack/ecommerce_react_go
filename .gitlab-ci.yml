@@ -20,6 +20,14 @@ variables:
 build_frontend:
   stage: build
   script:
+    - echo "Current directory: $(pwd)"  # Debug: Print current directory
+    - echo "Listing files in root directory:"  # Debug: List files in root directory
+    - ls -la
+    - echo "Changing to frontend directory..."
+    - cd frontend  # Change to the frontend directory
+    - echo "Current directory after cd: $(pwd)"  # Debug: Verify directory change
+    - echo "Listing files in frontend directory:"  # Debug: List files in frontend directory
+    - ls -la
     - echo "Installing dependencies..."
     - npm install
     - echo "Building React app..."
@@ -29,7 +37,7 @@ build_frontend:
       docker build \
         --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
         --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE ./frontend
+        -t $FRONTEND_IMAGE .
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
 
@@ -39,7 +47,7 @@ pages:
   script:
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir -p public
-    - cp -r frontend/build/* public/
+    - cp -r frontend/build/* public/  # Copy built files to public/
   artifacts:
     paths:
       - public
