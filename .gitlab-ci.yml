@@ -5,7 +5,7 @@ services:
 
 before_script:
   - echo "Setting up Docker..."
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
 stages:
   - build_frontend
@@ -17,9 +17,9 @@ stages:
 variables:
   DEPLOY_FRONTEND: "false"  # Frontend deployment is disabled by default
   DEPLOY_BACKEND: "true"    # Backend deployment is enabled by default
-  DOCKER_REGISTRY: registry.gitlab.com
-  FRONTEND_IMAGE: $DOCKER_REGISTRY/rezav/rezaverse/frontend
-  BACKEND_IMAGE: $DOCKER_REGISTRY/rezav/rezaverse/backend
+  CI_REGISTRY: registry.gitlab.com
+  FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
+  BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
@@ -84,7 +84,7 @@ deploy_frontend:
     paths:
       - public
   rules:
-    - if: '$DEPLOY_FRONTEND == "true"'
+    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
     - when: never
 
