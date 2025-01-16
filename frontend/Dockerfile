@@ -4,11 +4,14 @@ FROM node:14 AS build
 # Set the working directory to /frontend
 WORKDIR /frontend
 
-# Copy the entire frontend folder (including package.json)
-COPY . .
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+
+# Copy the rest of the application code
+COPY . .
 
 # ARG for backend API URL
 ARG REACT_APP_API_URL

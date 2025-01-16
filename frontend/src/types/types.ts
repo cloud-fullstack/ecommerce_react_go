@@ -1,4 +1,3 @@
-// src/types.ts
 export interface BlogPost {
   id: number;
   title: string;
@@ -12,5 +11,6 @@ export interface BlogPost {
   author_name: string;
   author_id: number;
   product_name: string;
-  category_id: number; // Add this line
+  category_id: number;
+  category_name: string; // Add this line
 }
