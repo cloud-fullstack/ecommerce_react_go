@@ -64,17 +64,23 @@ const Home = () => {
   // Handle screen size changes
   useEffect(() => {
     const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-      if (screenWidth >= 1280) setSlidesToShow(3);
-      else if (screenWidth >= 1024) setSlidesToShow(2);
-      else if (screenWidth >= 768) setSlidesToShow(2);
-      else if (screenWidth >= 640) setSlidesToShow(1);
+      const newWidth = window.innerWidth;
+      setScreenWidth(newWidth); // Update screenWidth state
+
+      // Update slidesToShow based on the new width
+      if (newWidth >= 1280) setSlidesToShow(3);
+      else if (newWidth >= 1024) setSlidesToShow(2);
+      else if (newWidth >= 768) setSlidesToShow(2);
+      else if (newWidth >= 640) setSlidesToShow(1);
       else setSlidesToShow(1);
     };
 
+    // Add event listener for window resize
     window.addEventListener("resize", handleResize);
+
+    // Cleanup function to remove the event listener
     return () => window.removeEventListener("resize", handleResize);
-  }, [screenWidth]);
+  }, []); // Empty dependency array since we don't depend on any state or props
 
   // Handle animation on page load
   useEffect(() => {

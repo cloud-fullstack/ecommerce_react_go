@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import useStore from "../../stores/useStore"; // Zustand store for global state
+import useStore from "../../stores/useStore";
 import "animate.css";
-import apiClient from '../../utils/api'; // Import the apiClient
+import apiClient from '../../utils/api';
 
 interface ProductPreviewProps {
   name?: string;
@@ -23,11 +23,10 @@ interface BuyDialogProps {
 
 const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClose }) => {
   const { authToken, aviKey, cart, setCart } = useStore();
-  const [hudStatus, setHudStatus] = useState(null);
   const [orderID, setOrderID] = useState("");
   const [orderSent, setOrderSent] = useState(false);
   const [revealOrderDetails, setRevealOrderDetails] = useState(false);
-  const [error, setError] = useState<string | null>(null); // Allow `null` or `string`
+  const [error, setError] = useState<string | null>(null);
 
   const getHUDStatus = async () => {
     if (!authToken || !aviKey) {
@@ -42,7 +41,6 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
       }
       return response.data;
     } catch (err) {
-      // Narrow down the type of `err` to `Error` or `AxiosError`
       if (err instanceof Error) {
         throw new Error(
           (err as any).response?.data?.message || "Failed to fetch HUD status"
@@ -54,12 +52,11 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
 
   const sendOrder = async (resendOrderID: string | null) => {
     let orderLines = cart.map((item) => ({
-      product_id: item.productID, // Ensure item.productID is always a string
+      product_id: item.productID,
       demo: item.demo,
     }));
 
     if (demoProduct) {
-      // Ensure demoProduct.productID is defined
       if (!demoProduct.productID) {
         throw new Error("Demo product ID is missing.");
       }
@@ -69,13 +66,11 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
     try {
       let response;
       if (resendOrderID) {
-        // For resend-order endpoint
         response = await apiClient.post("/api/resend-order/", {
           avatar_buyer: aviKey,
           order_id: resendOrderID,
         });
       } else {
-        // For create-order endpoint
         response = await apiClient.post("/api/create-order/", {
           avatar_buyer: aviKey,
           order_lines: orderLines,
@@ -87,10 +82,9 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
         throw new Error(response.data.message);
       }
 
-      setCart([]); // Clear the cart
+      setCart([]);
       return response.data.order_id;
     } catch (err) {
-      // Narrow down the type of `err` to `Error` or `AxiosError`
       if (err instanceof Error) {
         throw new Error(
           (err as any).response?.data?.message || "Failed to send order"
@@ -107,15 +101,14 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
       setOrderID(orderID);
       setOrderSent(true);
     } catch (err) {
-      // Narrow down the type of `err` to `Error`
       if (err instanceof Error) {
-        setError(err.message); // Use the error message directly
+        setError(err.message);
       } else {
-        setError("An unknown error occurred"); // Handle non-Error types
+        setError("An unknown error occurred");
       }
     }
   };
-  
+
   const truePrice = (price: number, discountedPrice: number, discountActive: boolean, demo: boolean) => {
     if (demo) return 0;
     if (discountActive) return discountedPrice;
@@ -130,17 +123,16 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
 
   useEffect(() => {
     getHUDStatus()
-      .then((hud) => setHudStatus(hud))
+      .then((hud) => { /* Use `hud` if needed */ })
       .catch((err) => {
         console.error("Error fetching HUD status:", err);
-        // Handle the error here
         if (err instanceof Error) {
-          setError(err.message); // Example: Set an error state
+          setError(err.message);
         } else {
           setError("An unknown error occurred");
         }
       });
-  }, []);
+  }, [getHUDStatus]); // Add `getHUDStatus` as a dependency
 
   return (
     <div className="p-4">

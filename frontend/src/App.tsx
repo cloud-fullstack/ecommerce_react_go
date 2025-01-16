@@ -30,6 +30,7 @@ function App() {
     localStorage.setItem('cookieAccepted', 'true');
   };
 
+  // Corrected useEffect
   useEffect(() => {
     console.log("Modal state changed:", showModal);
   }, [showModal]);

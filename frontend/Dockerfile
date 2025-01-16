@@ -1,7 +1,7 @@
-# Use the official Node.js image as a build stage
+# Stage 1: Build the React app
 FROM node:14 AS build
 
-# Set the working directory to /frontend
+# Set the working directory
 WORKDIR /frontend
 
 # Copy package.json and package-lock.json
@@ -13,18 +13,10 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# ARG for backend API URL
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=${REACT_APP_API_URL}
-
-# ARG for domain name
-ARG REACT_APP_DOMAIN_NAME
-ENV REACT_APP_DOMAIN_NAME=${REACT_APP_DOMAIN_NAME}
-
 # Build the application
 RUN npm run build
 
-# Use a lightweight web server to serve the built app
+# Stage 2: Serve the app using Nginx
 FROM nginx:alpine
 
 # Copy the built app from the previous stage

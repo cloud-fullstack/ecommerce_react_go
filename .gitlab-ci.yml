@@ -31,6 +31,8 @@ build_docker_image:
   script:
     - echo "Logging in to Docker Registry..."
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
+    - echo "Listing repository contents for debugging..."
+    - ls -R  # Debugging step to verify folder structure
     - echo "Building Docker image..."
     - docker build -t $FRONTEND_IMAGE -f frontend/Dockerfile .
     - echo "Pushing Docker image..."

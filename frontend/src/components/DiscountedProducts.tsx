@@ -25,9 +25,8 @@ const DiscountedProducts = () => {
   // Fetch discounted products
   const fetchDiscountedProducts = async () => {
     setLoading(true);
-    let res; // Declare `res` outside the `try` block
     try {
-      res = await apiClient.get("/api/discounted-products-frontpage/", {
+      const res = await apiClient.get("/api/discounted-products-frontpage/", {
         method: "GET",
       });
       const data = res.data;
@@ -40,7 +39,6 @@ const DiscountedProducts = () => {
       } else {
         setError("An unknown error occurred"); // Handle non-Error types
       }
-    
     } finally {
       setLoading(false);
     }
@@ -48,24 +46,35 @@ const DiscountedProducts = () => {
 
   // Handle screen size changes
   const handleResize = () => {
-    setScreenWidth(window.innerWidth);
-    if (screenWidth >= 767 && screenWidth <= 1280) setNumberOfCart(3);
-    else if (screenWidth <= 767 && screenWidth >= 640) setNumberOfCart(3);
-    else if (screenWidth <= 639 && screenWidth >= 481) setNumberOfCart(2);
-    else if (screenWidth <= 480) setNumberOfCart(1);
+    const newScreenWidth = window.innerWidth;
+    setScreenWidth(newScreenWidth);
+
+    // Update the number of carousel items based on screen width
+    if (newScreenWidth >= 767 && newScreenWidth <= 1280) setNumberOfCart(3);
+    else if (newScreenWidth <= 767 && newScreenWidth >= 640) setNumberOfCart(3);
+    else if (newScreenWidth <= 639 && newScreenWidth >= 481) setNumberOfCart(2);
+    else if (newScreenWidth <= 480) setNumberOfCart(1);
   };
 
   // Fetch data on mount
   useEffect(() => {
     fetchDiscountedProducts();
-
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   // Add event listener for screen size changes
   useEffect(() => {
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [screenWidth]);
+
+    // Cleanup function to remove the event listener
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount and cleanup on unmount
+
+  // Update number of carousel items when screenWidth changes
+  useEffect(() => {
+    handleResize(); // Call handleResize to update numberOfCart based on the current screenWidth
+  }, [screenWidth]); // Dependency array ensures this runs whenever screenWidth changes
 
   if (loading) return <p>Loading Products...</p>;
   if (error) return <p style={{ textAlign: "center" }}>{error}</p>;

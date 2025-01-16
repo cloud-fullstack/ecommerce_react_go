@@ -34,6 +34,7 @@ const Products = () => {
     "Vehicles", "Virtual Art", "Weapons"
   ];
 
+  // Handle escape key press
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -42,21 +43,25 @@ const Products = () => {
       }
     };
     document.addEventListener('keyup', handleEscape);
-    return () => document.removeEventListener('keyup', handleEscape);
-  }, []);
 
+    return () => {
+      document.removeEventListener('keyup', handleEscape);
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount and cleanup on unmount
+
+  // Fetch products on mount
   const fetchProducts = async () => {
     try {
       const res = await apiClient.get("/api/frontpage-product-previews/");
       const data = res.data; // Use `res.data` instead of `res.json()`
       if (data.error) throw new Error(data.message);
-  
+
       // Ensure `discounted` is always a boolean
       const products = data.map((product: any) => ({
         ...product,
         discounted: product.discounted || false, // Default to `false` if `discounted` is missing
       }));
-  
+
       setListOfProducts(products);
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -65,8 +70,9 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
+  // Apply filters to products
   const applyFilter = (arr: Product[], filter: string) => {
     switch (filter) {
       case "bestSell":
@@ -82,6 +88,7 @@ const Products = () => {
     }
   };
 
+  // Search and filter products by category
   const searchFilterCategory = (arr: Product[], searchTerm: string, filter: string) => {
     const filtered = applyFilter(arr, filter);
     return filtered.filter(order => 
@@ -134,16 +141,16 @@ const Products = () => {
               {listOfProducts.length > 0 ? (
                 searchFilterCategory(listOfProducts, searchProductName, selectedFilter).map((product, index) => (
                   <ProductPreview
-                  key={product.product_id}
-                  productID={product.product_id}
-                  storeID={product.store_id}
-                  name={product.product_name}
-                  pictureLink={product.picture_link}
-                  price={product.price}
-                  discountedPrice={product.discounted_price || product.price} // Correct prop name
-                  discountActive={product.discounted} // Correct prop name
-                  index={index}
-                />
+                    key={product.product_id}
+                    productID={product.product_id}
+                    storeID={product.store_id}
+                    name={product.product_name}
+                    pictureLink={product.picture_link}
+                    price={product.price}
+                    discountedPrice={product.discounted_price || product.price} // Correct prop name
+                    discountActive={product.discounted} // Correct prop name
+                    index={index}
+                  />
                 ))
               ) : (
                 <p>No products available!</p>

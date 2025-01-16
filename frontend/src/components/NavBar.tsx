@@ -70,12 +70,12 @@ const NavBar = () => {
       document.removeEventListener("click", handleOutsideClick, false);
       document.removeEventListener("keyup", handleEscape, false);
     };
-  }, [show]);
+  }, [show]); // Re-run when `show` changes
 
   // Fetch data on mount
   useEffect(() => {
     fetchProductPreviews();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   // Handle animation on mount
   useEffect(() => {

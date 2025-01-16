@@ -8,9 +8,14 @@ import apiClient from '../utils/api';
 
 const MostLovedBlogs = () => {
   const [mostLovedPictures, setMostLovedPictures] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null); // Allow `null` or `string`
   const { profilePicture } = useStore(); // Access the Zustand store
 
+  // Fetch most loved blog posts
   const fetchMostLovedPictures = async () => {
+    setLoading(true);
+    setError(null); // Reset error state before fetching
     try {
       const res = await apiClient.get("/api/most-loved-recent-blogs/", {
         method: "GET",
@@ -20,13 +25,18 @@ const MostLovedBlogs = () => {
       setMostLovedPictures(data);
     } catch (err) {
       console.error(err);
+      setError("Failed to load most loved blogs. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Fetch data on mount
   useEffect(() => {
     fetchMostLovedPictures();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
+  // Slider settings
   const settings = {
     dots: false,
     infinite: true,
@@ -37,6 +47,16 @@ const MostLovedBlogs = () => {
     autoplaySpeed: 5000,
     pauseOnHover: true,
   };
+
+  // Render loading state
+  if (loading) {
+    return <p>Loading most recent loved pictures...</p>;
+  }
+
+  // Render error state
+  if (error) {
+    return <p style={{ textAlign: "center", color: "red" }}>{error}</p>;
+  }
 
   return (
     <div className="relative px-4 pt-16 pb-20 sm:px-6 lg:px-8 lg:pt-24 lg:pb-28 bg-[#4f2236]">
@@ -52,28 +72,39 @@ const MostLovedBlogs = () => {
         </div>
         <div className="mt-12">
           {mostLovedPictures.length === 0 ? (
-            <p>Loading most recent loved pictures...</p>
+            <p>No blogs available!</p>
           ) : (
             <Slider {...settings}>
               {mostLovedPictures.map((pic, i) => (
                 <div key={i} className="px-2">
-                  <a href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}>
+                  <a
+                    href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}
+                    aria-label={`View blog post for ${pic.product_name}`}
+                  >
                     <div className="flex flex-col overflow-hidden rounded-lg shadow-lg cursor-pointer">
                       <div className="flex-shrink-0">
                         <img
                           className="h-48 w-full object-cover"
                           src={pic.picture_link}
-                          alt="bannerLovedBlog"
+                          alt={`Banner for ${pic.product_name}`}
                         />
                       </div>
                       <div className="flex flex-1 flex-col justify-between bg-white p-6">
                         <div className="flex-1">
                           <p className="text-sm font-medium text-indigo-600">
-                            <a href="#" className="hover:underline">
+                            <a
+                              href={`/category/${pic.category_id}`}
+                              className="hover:underline"
+                              aria-label={`View category ${pic.category_name}`}
+                            >
                               Category
                             </a>
                           </p>
-                          <a href="#" className="mt-2 block">
+                          <a
+                            href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}
+                            className="mt-2 block"
+                            aria-label={`View product ${pic.product_name}`}
+                          >
                             <p className="text-xl font-semibold text-gray-900">
                               {pic.product_name}
                             </p>
@@ -81,17 +112,24 @@ const MostLovedBlogs = () => {
                         </div>
                         <div className="mt-6 flex items-center">
                           <div className="flex-shrink-0">
-                            <a href={`/blog/${pic.blog_post_id}/`}>
-                            <img
-                                  className="h-10 w-10 rounded-full"
-                                  src={profilePicture || "https://via.placeholder.com/150"} // Fallback to a placeholder image
-                                  alt={pic.author_name}
-                                />
+                            <a
+                              href={`/blog/${pic.blog_post_id}/`}
+                              aria-label={`View blog post by ${pic.author_name}`}
+                            >
+                              <img
+                                className="h-10 w-10 rounded-full"
+                                src={profilePicture || "https://via.placeholder.com/150"} // Fallback to a placeholder image
+                                alt={pic.author_name}
+                              />
                             </a>
                           </div>
                           <div className="ml-3">
                             <p className="text-sm font-medium text-gray-900">
-                              <a href={`/blogs/${pic.author_id}`} className="hover:underline">
+                              <a
+                                href={`/blogs/${pic.author_id}`}
+                                className="hover:underline"
+                                aria-label={`View profile of ${pic.author_name}`}
+                              >
                                 {pic.author_name}
                               </a>
                             </p>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import useStore from "../stores/useStore";
 import SignInInstructions from "./SignInInstructions"; // Assuming you have this component
 import apiClient from '../utils/api';
+
 const QuickMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [hudStatus, setHudStatus] = useState("");
@@ -41,13 +42,13 @@ const QuickMenu = () => {
       document.removeEventListener("click", handleOutsideClick, false);
       document.removeEventListener("keyup", handleEscape, false);
     };
-  }, [showMenu]);
+  }, [showMenu]); // Re-run when `showMenu` changes
 
   // Fetch HUD status when menu is shown
   useEffect(() => {
     if (showMenu) {
       setHudStatus("Fetching HUD status ...");
-  
+
       // Use apiClient.post for POST requests
       apiClient
         .post(
@@ -76,7 +77,8 @@ const QuickMenu = () => {
           setHudStatus("Error fetching HUD status.");
         });
     }
-  }, [showMenu, authToken, aviKey]);
+  }, [showMenu, authToken, aviKey]); // Re-run when `showMenu`, `authToken`, or `aviKey` changes
+
   // Sign out function
   const signOut = () => {
     setAuthToken("");

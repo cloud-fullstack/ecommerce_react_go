@@ -17,7 +17,7 @@ const SignIn = () => {
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, []); // Empty dependency array to run only on mount/unmount
 
   // Determine screen type based on width
   useEffect(() => {
@@ -26,7 +26,7 @@ const SignIn = () => {
     } else {
       setScreenType("computer");
     }
-  }, [screenWidth]);
+  }, [screenWidth]); // Re-run when screenWidth changes
 
   // Handle "Enter the website logged out" click
   const handleEnter = () => {
@@ -44,7 +44,7 @@ const SignIn = () => {
         legacy_name: "user", // Replace with actual user name
         avatar_key: "user-key" // Replace with actual avatar key
       });
-  
+
       const data = response.data; // Use `response` instead of `res`
       if (data.token) {
         setAuthToken(data.token);
