@@ -1,35 +1,44 @@
 # Ignore vendor directory (Go dependencies)
-back/vendor/
+backend/vendor/
 
 .gitignore
 
+
+# Ignore everything except the files needed for the build
+
+!go.mod
+!go.sum
+!main.go
+!config.sh
+
+
 # Ignore temporary Dockerfiles and scripts (if not needed)
-back/backend-Dockerfile.txt
-back/Dockerfile_ok.txt
-back/config.sh*
+backend/backendend-Dockerfile.txt
+backend/Dockerfile_ok.txt
+
 
 # Ignore temporary text files
-back/main.txt
-back/main2.txt
-back/main_ok.txt
-back/main_new.txt
-back/main3.txt
+backend/main.txt
+backend/main2.txt
+backend/main_ok.txt
+backend/main_new.txt
+backend/main3.txt
 *.txt
-back/udo journalctl -xeu kubelet
-back/udo journalctl -xeu kubelet
-back/.config.sh.swp
+backend/udo journalctl -xeu kubelet
+backend/udo journalctl -xeu kubelet
+backend/.config.sh.swp
 
 # Ignore the entire vite-front folder
 vite-front/
 
-# Ignore the entire backend folder
-backend/
+# Ignore the entire backendend folder
 
-# Frontend (React)
-rezaverse/node_modules/
-rezaverse/build/
-rezaverse/.env
-rezaverse/.DS_Store
+
+# backend (React)
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.DS_Store
 
 # Node modules
 node_modules/
