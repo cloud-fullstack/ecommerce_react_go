@@ -27,6 +27,9 @@ debug_flags:
   script:
     - echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
     - echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
+    - echo "CI_REGISTRY is set to: $CI_REGISTRY"
+    - echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
+    - echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
   rules:
     - if: '$DEPLOY_FRONTEND == "true" || $DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
@@ -61,42 +64,4 @@ build_backend:
         --build-arg DB_HOST="db-shopa-do-user-10123840-0.b.db.ondigitalocean.com" \
         --build-arg DB_PORT="25060" \
         --build-arg DB_USER="doadmin" \
-        --build-arg DB_NAME="dev_shopa" \
-        --build-arg DB_SSLMODE="require" \
-        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
-        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $BACKEND_IMAGE ./backend
-    - echo "Pushing backend Docker image to GitLab Container Registry..."
-    - docker push $BACKEND_IMAGE
-  rules:
-    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
-
-# Deploy Frontend to GitLab Pages
-deploy_frontend:
-  stage: deploy_frontend
-  script:
-    - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
-
-# Deploy Backend (Example: Deploy to Kubernetes or another platform)
-deploy_backend:
-  stage: deploy_backend
-  script:
-    - echo "Deploying backend..."
-    # Add your backend deployment script here (e.g., deploy to Kubernetes, DigitalOcean, etc.)
-    # Example:
-    # kubectl apply -f backend-deployment.yaml
-  rules:
-    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
+        --build-arg DB_NAME="dev
