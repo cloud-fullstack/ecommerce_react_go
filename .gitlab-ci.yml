@@ -43,8 +43,12 @@ build_frontend:
 
 pages:
   stage: deploy
-  image: alpine:latest
   script:
+    - echo "Current directory: $(pwd)"  # Debug: Print current directory
+    - echo "Listing files in root directory:"  # Debug: List files in root directory
+    - ls -la
+    - echo "Listing files in frontend/build directory:"  # Debug: List files in frontend/build
+    - ls -la frontend/build
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir -p public
     - cp -r frontend/build/* public/  # Copy built files to public/
