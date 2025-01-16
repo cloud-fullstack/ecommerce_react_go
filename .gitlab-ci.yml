@@ -28,15 +28,17 @@ build_docker_image:
   image: docker:latest  # Use Docker image for Docker commands
   services:
     - docker:dind  # Enable Docker-in-Docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375  # Required for Docker-in-Docker
   script:
     - echo "Logging in to Docker Registry..."
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$DOCKER_REGISTRY"
     - echo "Listing repository contents for debugging..."
     - ls -R  # Debugging step to verify folder structure
     - echo "Building Docker image..."
-    - docker build -t $FRONTEND_IMAGE -f frontend/Dockerfile .
+    - docker build -t $FRONTEND_IMAGE:$CI_COMMIT_SHORT_SHA -f frontend/Dockerfile .
     - echo "Pushing Docker image..."
-    - docker push $FRONTEND_IMAGE
+    - docker push $FRONTEND_IMAGE:$CI_COMMIT_SHORT_SHA
   only:
     - main
 
@@ -46,7 +48,7 @@ pages:
   image: alpine:latest  # Use a lightweight image for deployment
   script:
     - echo "Deploying frontend to GitLab Pages..."
-    - mkdir public
+    - mkdir -p public  # Ensure the public directory exists
     - cp -r frontend/build/* public/
   artifacts:
     paths:
