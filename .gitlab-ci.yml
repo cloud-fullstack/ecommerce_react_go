@@ -1,6 +1,6 @@
 stages:
   - build
-  - deploy  # Add this new stage
+  - deploy
 
 variables:
   DOCKER_REGISTRY: registry.gitlab.com
@@ -13,11 +13,15 @@ before_script:
 # Build Frontend Docker Image
 build_frontend:
   stage: build
-  image: docker:latest  # Use the Docker image
+  image: node:18  # Use Node.js image for React
   services:
     - docker:dind  # Use Docker-in-Docker
   script:
-    - echo "Building frontend Docker image..."
+    - echo "Installing dependencies..."
+    - npm install
+    - echo "Building React app..."
+    - npm run build
+    - echo "Building Docker image..."
     - >
       docker build \
         --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
@@ -25,17 +29,17 @@ build_frontend:
         -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
-  only:
-    - main  # Adjust this if you're working with a different branch like `develop`
 
 # Deploy to GitLab Pages
 pages:
   stage: deploy
+  image: alpine:latest  # Use a lightweight image for deployment
   script:
-    - mkdir public
-    - cp -r frontend/build/* public/
+    - echo "Deploying frontend to GitLab Pages..."
+    - mkdir -p public  # Ensure the public directory exists
+    - cp -r frontend/build/* public/  # Copy built files to public/
   artifacts:
     paths:
-      - public
+      - public  # GitLab Pages serves the contents of the public folder
   only:
-    - main
+    - main  # Adjust this if you're working with a different branch like `develop`
