@@ -36,6 +36,17 @@ debug_flags:
       when: always
     - when: never
 
+# Debug: List files in the repository
+debug_files:
+  stage: build_backend
+  script:
+    - echo "Listing files in the repository..."
+    - ls -R
+  rules:
+    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
+      when: always
+    - when: never
+
 # Build Frontend Docker Image
 build_frontend:
   stage: build_frontend
