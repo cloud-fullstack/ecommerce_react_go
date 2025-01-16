@@ -13,7 +13,7 @@ before_script:
 # Build Frontend Docker Image
 build_frontend:
   stage: build
-  image: node:18  # Use Node.js image for React
+  image: node:14  # Use Node.js image for React
   services:
     - docker:dind  # Use Docker-in-Docker
   script:
