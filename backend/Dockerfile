@@ -3,6 +3,7 @@ FROM golang:1.21-alpine AS builder
 
 # Set the Go module proxy
 ENV GOPROXY=https://goproxy.io,direct
+
 # Set the working directory
 WORKDIR /app
 
@@ -28,10 +29,10 @@ WORKDIR /app
 COPY --from=builder /app/main .
 
 # Copy the config.sh file (if used)
-COPY config.sh config.sh
+COPY config.sh /app/config.sh
 
 # Make the config.sh script executable
-RUN chmod +x config.sh
+RUN chmod +x /app/config.sh
 
 # Define build-time arguments
 ARG API_PORT

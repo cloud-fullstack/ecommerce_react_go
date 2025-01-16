@@ -7,6 +7,7 @@ before_script:
   - echo "Setting up Docker..."
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
+
 stages:
   - build_frontend
   - build_backend
