@@ -10,6 +10,10 @@ variables:
 build_frontend:
   stage: build
   image: node:18  # Use Node.js image for building React
+  cache:
+    key: frontend-node-modules
+    paths:
+      - frontend/node_modules/  # Cache node_modules to speed up builds
   script:
     - echo "Building React frontend..."
     - cd frontend
@@ -49,9 +53,9 @@ pages:
   script:
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir -p public  # Ensure the public directory exists
-    - cp -r frontend/build/* public/
+    - cp -r frontend/build/* public/  # Copy built files to public/
   artifacts:
     paths:
-      - public
+      - public  # GitLab Pages serves the contents of the public folder
   only:
     - main
