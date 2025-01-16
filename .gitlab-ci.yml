@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy  # Add this new stage
 
 variables:
   DOCKER_REGISTRY: registry.gitlab.com
@@ -24,16 +25,17 @@ build_frontend:
         -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
-
-pages:
-  stage: deploy
-  image: alpine:latest  # Use a lightweight image for deployment
-  script:
-    - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public  # Ensure the public directory exists
-    - cp -r frontend/build/* public/  # Copy built files to public/
-  artifacts:
-    paths:
-      - public  # GitLab Pages serves the contents of the public folder
   only:
     - main  # Adjust this if you're working with a different branch like `develop`
+
+# Deploy to GitLab Pages
+pages:
+  stage: deploy
+  script:
+    - mkdir public
+    - cp -r frontend/build/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
