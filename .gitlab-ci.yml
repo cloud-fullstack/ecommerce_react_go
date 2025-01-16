@@ -4,9 +4,7 @@ services:
   - docker:dind
 
 before_script:
-  - echo "Setting up Docker and Node.js..."
-  - apk add --no-cache nodejs npm  # Install Node.js and npm
-  - npm install -g npm@latest      # Update npm to the latest version
+  - echo "Setting up Docker..."
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
 
 stages:
@@ -20,38 +18,23 @@ variables:
 build_frontend:
   stage: build
   script:
-    - echo "Current directory: $(pwd)"  # Debug: Print current directory
-    - echo "Listing files in root directory:"  # Debug: List files in root directory
-    - ls -la
-    - echo "Changing to frontend directory..."
-    - cd frontend  # Change to the frontend directory
-    - echo "Current directory after cd: $(pwd)"  # Debug: Verify directory change
-    - echo "Listing files in frontend directory:"  # Debug: List files in frontend directory
-    - ls -la
-    - echo "Installing dependencies..."
-    - npm install
-    - echo "Building React app..."
-    - npm run build
     - echo "Building Docker image..."
     - >
       docker build \
         --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
         --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE .
+        -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
+  only:
+    - main
 
 pages:
   stage: deploy
   script:
-    - echo "Current directory: $(pwd)"  # Debug: Print current directory
-    - echo "Listing files in root directory:"  # Debug: List files in root directory
-    - ls -la
-    - echo "Listing files in frontend/build directory:"  # Debug: List files in frontend/build
-    - ls -la frontend/build
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir -p public
-    - cp -r frontend/build/* public/  # Copy built files to public/
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
   artifacts:
     paths:
       - public
