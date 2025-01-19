@@ -1,7 +1,7 @@
 # Use the official Node.js image as a build stage
 FROM node:14 AS build
 
-# Set the working directory to /frontend
+# Set the working directory
 WORKDIR /frontend
 
 # Copy package.json and package-lock.json
@@ -29,6 +29,14 @@ FROM nginx:alpine
 
 # Copy the built app from the previous stage
 COPY --from=build /frontend/build /usr/share/nginx/html
+
+# ARG for CSS and JS paths
+ARG CSS_PATH
+ARG JS_PATH
+
+# Replace placeholders in index.html with actual paths
+RUN sed -i "s|%CSS_PATH%|${CSS_PATH}|g" /usr/share/nginx/html/index.html && \
+    sed -i "s|%JS_PATH%|${JS_PATH}|g" /usr/share/nginx/html/index.html
 
 # Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
