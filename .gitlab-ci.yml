@@ -29,12 +29,11 @@ cache:
 debug_flags:
   stage: build_frontend
   script:
-    - |
-      echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
-      echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
-      echo "CI_REGISTRY is set to: $CI_REGISTRY"
-      echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
-      echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
+    - echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
+    - echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
+    - echo "CI_REGISTRY is set to: $CI_REGISTRY"
+    - echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
+    - echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
   rules:
     - if: '$DEPLOY_FRONTEND == "true" || $DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
@@ -56,11 +55,7 @@ build_frontend:
   stage: build_frontend
   script:
     - echo "Building frontend Docker image..."
-    - >
-      docker build \
-        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
-        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE ./frontend
+    - docker build --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing frontend Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
   rules:
@@ -73,13 +68,7 @@ build_backend:
   stage: build_backend
   script:
     - echo "Building backend Docker image..."
-    - >
-      docker build \
-        --build-arg API_PORT="8080" \
-        --build-arg STATIC_PATH="/app/dist" \
-        --build-arg DB_HOST="db-shopa-do-user-10123840-0.b.db.ondigitalocean.com" \
-        --build-arg DB_PORT="25060" \
-        -t $BACKEND_IMAGE ./backend
+    - docker build --build-arg API_PORT="8080" --build-arg STATIC_PATH="/app/dist" --build-arg DB_HOST="db-shopa-do-user-10123840-0.b.db.ondigitalocean.com" --build-arg DB_PORT="25060" -t $BACKEND_IMAGE ./backend
     - echo "Pushing backend Docker image to GitLab Container Registry..."
     - docker push $BACKEND_IMAGE
   rules:
