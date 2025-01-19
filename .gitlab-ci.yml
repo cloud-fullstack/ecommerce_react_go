@@ -21,8 +21,9 @@ variables:
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
 
 cache:
+  key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - node_modules/
+    - frontend/node_modules/
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
@@ -54,16 +55,14 @@ debug_files:
 build_frontend:
   stage: build_frontend
   script:
-    - echo "Building frontend..."
-    - rm -rf build
-    - CI=false npm install
-    - CI=false npm run build
-    - rm -rf public
-    - cp build/index.html build/404.html
-    - mv build public
-  artifacts:
-    paths:
-      - public
+    - echo "Building frontend Docker image..."
+    - >
+      docker build \
+        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
+        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
+        -t $FRONTEND_IMAGE ./frontend
+    - echo "Pushing frontend Docker image to GitLab Container Registry..."
+    - docker push $FRONTEND_IMAGE
   rules:
     - if: '$DEPLOY_FRONTEND == "true"'
       when: always
@@ -93,6 +92,8 @@ deploy_frontend:
   stage: deploy_frontend
   script:
     - echo "Deploying frontend to GitLab Pages..."
+    - mkdir -p public
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
     - ls public
   artifacts:
     paths:
