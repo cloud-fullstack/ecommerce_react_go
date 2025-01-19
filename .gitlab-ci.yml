@@ -13,13 +13,16 @@ stages:
   - deploy_frontend
   - deploy_backend
 
-# Define the DEPLOY_FRONTEND variable internally (set to false by default)
 variables:
-  DEPLOY_FRONTEND: "true"  # Frontend deployment is enabled
-  DEPLOY_BACKEND: "true"   # Backend deployment is enabled
+  DEPLOY_FRONTEND: "true"
+  DEPLOY_BACKEND: "true"
   CI_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
+
+cache:
+  paths:
+    - node_modules/
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
@@ -47,24 +50,26 @@ debug_files:
       when: always
     - when: never
 
-# Build Frontend Docker Image
+# Build Frontend
 build_frontend:
   stage: build_frontend
   script:
-    - echo "Building frontend Docker image..."
-    - >
-      docker build \
-        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
-        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE ./frontend
-    - echo "Pushing frontend Docker image to GitLab Container Registry..."
-    - docker push $FRONTEND_IMAGE
+    - echo "Building frontend..."
+    - rm -rf build
+    - CI=false npm install
+    - CI=false npm run build
+    - rm -rf public
+    - cp build/index.html build/404.html
+    - mv build public
+  artifacts:
+    paths:
+      - public
   rules:
     - if: '$DEPLOY_FRONTEND == "true"'
       when: always
     - when: never
 
-# Build Backend Docker Image
+# Build Backend
 build_backend:
   stage: build_backend
   script:
@@ -88,8 +93,7 @@ deploy_frontend:
   stage: deploy_frontend
   script:
     - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
+    - ls public
   artifacts:
     paths:
       - public
@@ -98,14 +102,12 @@ deploy_frontend:
       when: always
     - when: never
 
-# Deploy Backend (Example: Deploy to Kubernetes or another platform)
+# Deploy Backend
 deploy_backend:
   stage: deploy_backend
   script:
     - echo "Deploying backend..."
-    # Add your backend deployment script here (e.g., deploy to Kubernetes, DigitalOcean, etc.)
-    # Example:
-    # kubectl apply -f backend-deployment.yaml
+    # Add your backend deployment script here
   rules:
     - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
