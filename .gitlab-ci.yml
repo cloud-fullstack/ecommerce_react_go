@@ -15,11 +15,16 @@ stages:
 
 # Define the DEPLOY_FRONTEND variable internally (set to false by default)
 variables:
-  DEPLOY_FRONTEND: "true"  # Frontend deployment is disabled by default
-  DEPLOY_BACKEND: "false"    # Backend deployment is enabled by default
+  DEPLOY_FRONTEND: "true"  # Frontend deployment is enabled
+  DEPLOY_BACKEND: "true"   # Backend deployment is enabled
   CI_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - frontend/node_modules/
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
