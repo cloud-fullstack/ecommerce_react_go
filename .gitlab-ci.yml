@@ -93,7 +93,7 @@ deploy_frontend:
   script:
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir -p public
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3
     - ls public  # Debug: List files in the public directory
   artifacts:
     paths:
