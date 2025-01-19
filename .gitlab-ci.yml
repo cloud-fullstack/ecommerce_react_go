@@ -15,16 +15,11 @@ stages:
 
 # Define the DEPLOY_FRONTEND variable internally (set to false by default)
 variables:
-  DEPLOY_FRONTEND: "true"  # Frontend deployment is enabled
-  DEPLOY_BACKEND: "true"   # Backend deployment is enabled
+  DEPLOY_FRONTEND: "true"  # Frontend deployment is disabled by default
+  DEPLOY_BACKEND: "false"    # Backend deployment is enabled by default
   CI_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
-
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - frontend/node_modules/
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
@@ -53,21 +48,19 @@ debug_files:
     - when: never
 
 # Build Frontend Docker Image
-deploy_frontend:
-  stage: deploy_frontend
+build_frontend:
+  stage: build_frontend
   script:
-    - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public/rezaverse
-    - docker run --rm $FRONTEND_IMAGE tar -cf - -C /usr/share/nginx/html . | tar -xf - -C public/rezaverse
-    - CSS_PATH=$(grep -oP '(?<="main.css": ")[^"]+' public/rezaverse/asset-manifest.json)
-    - JS_PATH=$(grep -oP '(?<="main.js": ")[^"]+' public/rezaverse/asset-manifest.json)
-    - sed -i "s|%CSS_PATH%|$CSS_PATH|g" public/rezaverse/index.html
-    - sed -i "s|%JS_PATH%|$JS_PATH|g" public/rezaverse/index.html
-  artifacts:
-    paths:
-      - public
+    - echo "Building frontend Docker image..."
+    - >
+      docker build \
+        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
+        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
+        -t $FRONTEND_IMAGE ./frontend
+    - echo "Pushing frontend Docker image to GitLab Container Registry..."
+    - docker push $FRONTEND_IMAGE
   rules:
-    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
+    - if: '$DEPLOY_FRONTEND == "true"'
       when: always
     - when: never
 
@@ -108,7 +101,8 @@ deploy_frontend:
     - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
     - when: never
-    
+
+
 # Deploy Backend (Example: Deploy to Kubernetes or another platform)
 deploy_backend:
   stage: deploy_backend
@@ -121,3 +115,4 @@ deploy_backend:
     - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
     - when: never
+
