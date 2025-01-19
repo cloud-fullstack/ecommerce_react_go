@@ -88,8 +88,12 @@ deploy_frontend:
   stage: deploy_frontend
   script:
     - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
+    - mkdir -p public/rezaverse
+    - docker run --rm $FRONTEND_IMAGE tar -cf - -C /usr/share/nginx/html . | tar -xf - -C public/rezaverse
+    - CSS_PATH=$(grep -oP '(?<="main.css": ")[^"]+' public/rezaverse/asset-manifest.json)
+    - JS_PATH=$(grep -oP '(?<="main.js": ")[^"]+' public/rezaverse/asset-manifest.json)
+    - sed -i "s|%CSS_PATH%|$CSS_PATH|g" public/rezaverse/index.html
+    - sed -i "s|%JS_PATH%|$JS_PATH|g" public/rezaverse/index.html
   artifacts:
     paths:
       - public
