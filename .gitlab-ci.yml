@@ -53,19 +53,21 @@ debug_files:
     - when: never
 
 # Build Frontend Docker Image
-build_frontend:
-  stage: build_frontend
+deploy_frontend:
+  stage: deploy_frontend
   script:
-    - echo "Building frontend Docker image..."
-    - >
-      docker build \
-        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
-        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE ./frontend
-    - echo "Pushing frontend Docker image to GitLab Container Registry..."
-    - docker push $FRONTEND_IMAGE
+    - echo "Deploying frontend to GitLab Pages..."
+    - mkdir -p public/rezaverse
+    - docker run --rm $FRONTEND_IMAGE tar -cf - -C /usr/share/nginx/html . | tar -xf - -C public/rezaverse
+    - CSS_PATH=$(grep -oP '(?<="main.css": ")[^"]+' public/rezaverse/asset-manifest.json)
+    - JS_PATH=$(grep -oP '(?<="main.js": ")[^"]+' public/rezaverse/asset-manifest.json)
+    - sed -i "s|%CSS_PATH%|$CSS_PATH|g" public/rezaverse/index.html
+    - sed -i "s|%JS_PATH%|$JS_PATH|g" public/rezaverse/index.html
+  artifacts:
+    paths:
+      - public
   rules:
-    - if: '$DEPLOY_FRONTEND == "true"'
+    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
     - when: never
 
