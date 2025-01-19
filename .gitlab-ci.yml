@@ -13,13 +13,17 @@ stages:
   - deploy_frontend
   - deploy_backend
 
-# Define the DEPLOY_FRONTEND variable internally (set to false by default)
 variables:
   DEPLOY_FRONTEND: "true"  # Frontend deployment is enabled
   DEPLOY_BACKEND: "true"   # Backend deployment is enabled
   CI_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - frontend/node_modules/
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
@@ -58,10 +62,6 @@ build_frontend:
     - if: '$DEPLOY_FRONTEND == "true"'
       when: always
     - when: never
-
-cache:
-  paths:
-    - node_modules/
 
 # Build Backend Docker Image
 build_backend:
