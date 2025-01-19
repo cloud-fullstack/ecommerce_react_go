@@ -3,32 +3,34 @@ image: docker:latest
 services:
   - docker:dind
 
+before_script:
+  - echo "Setting up Docker..."
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
 stages:
   - build_frontend
   - build_backend
   - deploy_frontend
   - deploy_backend
 
+# Define the DEPLOY_FRONTEND variable internally (set to false by default)
 variables:
-  DEPLOY_FRONTEND: "true"  # Frontend deployment is enabled by default
-  DEPLOY_BACKEND: "false"  # Backend deployment is disabled by default
+  DEPLOY_FRONTEND: "false"  # Frontend deployment is disabled by default
+  DEPLOY_BACKEND: "true"    # Backend deployment is enabled by default
   CI_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
 
-before_script:
-  - echo "Setting up Docker..."
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
-# Debug: Print the value of variables
+# Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
-  stage: .pre  # Use .pre stage for debugging
+  stage: build_frontend
   script:
-    - echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
-    - echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
-    - echo "CI_REGISTRY is set to: $CI_REGISTRY"
-    - echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
-    - echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
+    - |
+      echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
+      echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
+      echo "CI_REGISTRY is set to: $CI_REGISTRY"
+      echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
+      echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
   rules:
     - if: '$DEPLOY_FRONTEND == "true" || $DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
@@ -36,7 +38,7 @@ debug_flags:
 
 # Debug: List files in the repository
 debug_files:
-  stage: .pre  # Use .pre stage for debugging
+  stage: build_backend
   script:
     - echo "Listing files in the repository..."
     - ls -R
@@ -81,7 +83,6 @@ build_backend:
       when: always
     - when: never
 
-# Deploy Frontend to GitLab Pages
 # Deploy Frontend to GitLab Pages
 deploy_frontend:
   stage: deploy_frontend
