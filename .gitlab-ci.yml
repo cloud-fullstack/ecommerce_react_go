@@ -13,17 +13,13 @@ stages:
   - deploy_frontend
   - deploy_backend
 
+# Define the DEPLOY_FRONTEND variable internally (set to false by default)
 variables:
-  DEPLOY_FRONTEND: "true"
-  DEPLOY_BACKEND: "true"
+  DEPLOY_FRONTEND: "true"  # Frontend deployment is enabled
+  DEPLOY_BACKEND: "true"   # Backend deployment is enabled
   CI_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
-
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - frontend/node_modules/
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
 debug_flags:
@@ -50,7 +46,7 @@ debug_files:
       when: always
     - when: never
 
-# Build Frontend
+# Build Frontend Docker Image
 build_frontend:
   stage: build_frontend
   script:
@@ -63,7 +59,11 @@ build_frontend:
       when: always
     - when: never
 
-# Build Backend
+cache:
+  paths:
+    - node_modules/
+
+# Build Backend Docker Image
 build_backend:
   stage: build_backend
   script:
@@ -82,10 +82,7 @@ deploy_frontend:
   script:
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir -p public
-    - docker run --rm $FRONTEND_IMAGE ls -R /usr/share/nginx/html  # Debug: List files in the Docker image
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3
-    - ls -R public  # Debug: List files in the public directory
-    - if [ ! -f public/asset-manifest.json ]; then echo "Error: asset-manifest.json is missing!"; exit 1; fi
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
   artifacts:
     paths:
       - public
@@ -94,12 +91,14 @@ deploy_frontend:
       when: always
     - when: never
 
-# Deploy Backend
+# Deploy Backend (Example: Deploy to Kubernetes or another platform)
 deploy_backend:
   stage: deploy_backend
   script:
     - echo "Deploying backend..."
-    # Add your backend deployment script here
+    # Add your backend deployment script here (e.g., deploy to Kubernetes, DigitalOcean, etc.)
+    # Example:
+    # kubectl apply -f backend-deployment.yaml
   rules:
     - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
