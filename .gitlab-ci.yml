@@ -82,15 +82,16 @@ build_backend:
     - when: never
 
 # Deploy Frontend to GitLab Pages
+# Deploy Frontend to GitLab Pages
 deploy_frontend:
   stage: deploy_frontend
   script:
     - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public/rezaverse
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public/rezaverse
+    - mkdir -p public
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
   artifacts:
     paths:
-      - public/rezaverse
+      - public
   rules:
     - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
