@@ -97,6 +97,10 @@ deploy_frontend:
     - echo "Deploying frontend to GitLab Pages..."
     - mkdir -p public/rezaverse
     - docker run --rm $FRONTEND_IMAGE tar -cf - -C /usr/share/nginx/html . | tar -xf - -C public/rezaverse
+    - CSS_PATH=$(grep -oP '(?<="main.css": ")[^"]+' public/rezaverse/asset-manifest.json)
+    - JS_PATH=$(grep -oP '(?<="main.js": ")[^"]+' public/rezaverse/asset-manifest.json)
+    - sed -i "s|%CSS_PATH%|$CSS_PATH|g" public/rezaverse/index.html
+    - sed -i "s|%JS_PATH%|$JS_PATH|g" public/rezaverse/index.html
   artifacts:
     paths:
       - public
@@ -104,7 +108,7 @@ deploy_frontend:
     - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
     - when: never
-
+    
 # Deploy Backend (Example: Deploy to Kubernetes or another platform)
 deploy_backend:
   stage: deploy_backend
