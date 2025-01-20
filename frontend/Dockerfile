@@ -30,19 +30,11 @@ FROM nginx:alpine
 # Copy the built app from the previous stage
 COPY --from=build /frontend/build /usr/share/nginx/html
 
-# ARG for CSS and JS paths
-ARG CSS_PATH
-ARG JS_PATH
-
-# Replace placeholders in index.html with actual paths
-RUN sed -i "s|%CSS_PATH%|${CSS_PATH}|g" /usr/share/nginx/html/index.html && \
-    sed -i "s|%JS_PATH%|${JS_PATH}|g" /usr/share/nginx/html/index.html
-
 # Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose the port the app runs on
-EXPOSE 80
+EXPOSE 80/tcp 
 
 # Command to run the app
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]  
