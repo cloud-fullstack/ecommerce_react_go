@@ -25,16 +25,7 @@ cache:
 build_frontend:
   stage: build_frontend
   script:
-    - echo "Logging in to GitLab Container Registry..."
-    - echo "CI_REGISTRY: $CI_REGISTRY"
-    - echo "CI_JOB_TOKEN: $CI_JOB_TOKEN"
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - echo "Building frontend Docker image..."
-    - >
-      docker build \
-        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
-        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE ./frontend
+    - docker build --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" -t $FRONTEND_IMAGE ./frontend
     - echo "Pushing frontend Docker image to GitLab Container Registry..."
     - docker push $FRONTEND_IMAGE
 
