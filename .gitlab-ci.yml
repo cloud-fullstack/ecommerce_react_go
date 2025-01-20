@@ -101,11 +101,13 @@ deploy_frontend:
   stage: deploy_frontend
   script:
     - echo "Deploying frontend to GitLab Pages..."
-    - mkdir -p public
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public
+    - rm -rf public  # Clean up the public directory if it exists
+    - mkdir -p public  # Create the public directory
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3  # Extract files directly into public
+    - cp public/index.html public/404.html  # Handle client-side routing for GitLab Pages
   artifacts:
     paths:
-      - public
+      - public  # Save the public directory as an artifact
   rules:
     - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
