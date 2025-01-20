@@ -1,4 +1,11 @@
-image: node:16  # Use a Node.js image for the frontend build
+image: docker:latest
+
+services:
+  - docker:dind
+
+before_script:
+  - echo "Setting up Docker..."
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
 stages:
   - build_frontend
@@ -8,19 +15,26 @@ stages:
 
 # Define the DEPLOY_FRONTEND variable internally (set to false by default)
 variables:
-  DEPLOY_FRONTEND: "true"  # Frontend deployment is enabled by default
-  DEPLOY_BACKEND: "false"  # Backend deployment is disabled by default
+  DEPLOY_FRONTEND: "false"  # Frontend deployment is disabled by default
+  DEPLOY_BACKEND: "true"    # Backend deployment is enabled by default
   CI_REGISTRY: registry.gitlab.com
   FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
   BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - frontend/node_modules/  # Cache node_modules for faster builds
-
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
-
+debug_flags:
+  stage: build_frontend
+  script:
+    - |
+      echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
+      echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
+      echo "CI_REGISTRY is set to: $CI_REGISTRY"
+      echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
+      echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
+  rules:
+    - if: '$DEPLOY_FRONTEND == "true" || $DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
+      when: always
+    - when: never
 
 # Debug: List files in the repository
 debug_files:
@@ -33,19 +47,18 @@ debug_files:
       when: always
     - when: never
 
-# Build Frontend
+# Build Frontend Docker Image
 build_frontend:
   stage: build_frontend
   script:
-    - echo "Installing frontend dependencies..."
-    - cd frontend && npm install
-    - echo "Building the frontend..."
-    - npm run build
-    - echo "Listing files in the build directory..."
-    - ls -R build/  # Verify the build directory structure
-  artifacts:
-    paths:
-      - frontend/build/  # Save the build directory as an artifact
+    - echo "Building frontend Docker image..."
+    - >
+      docker build \
+        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
+        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
+        -t $FRONTEND_IMAGE ./frontend
+    - echo "Pushing frontend Docker image to GitLab Container Registry..."
+    - docker push $FRONTEND_IMAGE
   rules:
     - if: '$DEPLOY_FRONTEND == "true"'
       when: always
@@ -73,21 +86,13 @@ build_backend:
 # Deploy Frontend to GitLab Pages
 deploy_frontend:
   stage: deploy_frontend
-  dependencies:
-    - build_frontend  # Ensure this job runs after the build_frontend job
   script:
     - echo "Deploying frontend to GitLab Pages..."
-    - rm -rf public  # Clean up the public directory if it exists
-    - mkdir -p public  # Create the public directory
-    - echo "Copying build files to public directory..."
-    - cp -r frontend/build/* public/  # Copy the build files to the public directory
-    - echo "Creating 404.html for client-side routing..."
-    - cp public/index.html public/404.html  # Handle client-side routing for GitLab Pages
-    - echo "Listing files in the public directory..."
-    - ls -R public/  # Verify the public directory structure
+    - mkdir -p public
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3  # Extract files directly into public
   artifacts:
     paths:
-      - public/  # Deploy the public directory to GitLab Pages
+      - public
   rules:
     - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
