@@ -83,6 +83,19 @@ build_backend:
       when: always
     - when: never
 
+# Deploy Backend (Example: Deploy to Kubernetes or another platform)
+deploy_backend:
+  stage: deploy_backend
+  script:
+    - echo "Deploying backend..."
+    # Add your backend deployment script here (e.g., deploy to Kubernetes, DigitalOcean, etc.)
+    # Example:
+    # kubectl apply -f backend-deployment.yaml
+  rules:
+    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
+      when: always
+    - when: never
+    
 # Deploy Frontend to GitLab Pages
 deploy_frontend:
   stage: deploy_frontend
@@ -98,15 +111,17 @@ deploy_frontend:
       when: always
     - when: never
 
-# Deploy Backend (Example: Deploy to Kubernetes or another platform)
-deploy_backend:
-  stage: deploy_backend
+pages:
+  stage: deploy_frontend
+  dependencies:
+    - deploy_frontend
   script:
-    - echo "Deploying backend..."
-    # Add your backend deployment script here (e.g., deploy to Kubernetes, DigitalOcean, etc.)
-    # Example:
-    # kubectl apply -f backend-deployment.yaml
+    - echo "Deploying to GitLab Pages..."
+  artifacts:
+    paths:
+      - public
   rules:
-    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
+    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
       when: always
     - when: never
+
