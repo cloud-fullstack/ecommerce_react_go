@@ -20,18 +20,7 @@ cache:
     - frontend/node_modules/  # Cache node_modules for faster builds
 
 # Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
-debug_flags:
-  stage: build_frontend
-  script:
-    - echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
-    - echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
-    - echo "CI_REGISTRY is set to: $CI_REGISTRY"
-    - echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
-    - echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
-  rules:
-    - if: '$DEPLOY_FRONTEND == "true" || $DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
+
 
 # Debug: List files in the repository
 debug_files:
