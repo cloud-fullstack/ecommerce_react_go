@@ -3,7 +3,7 @@ image: docker:latest
 services:
   - docker:dind
 
-stages:
+stages: 
   - build_backend
   - deploy_backend
   - build_frontend
@@ -22,11 +22,7 @@ cache:
     - frontend/node_modules/
 
 # Debugging Stage
-debug:
-  stage: build_backend
-  script:
-    - echo "DEPLOY_FRONTEND: $DEPLOY_FRONTEND"
-    - echo "DEPLOY_BACKEND: $DEPLOY_BACKEND"
+
 
 # Build Backend Docker Image
 build_backend:
