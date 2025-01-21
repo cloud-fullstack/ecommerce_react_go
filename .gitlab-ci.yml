@@ -41,3 +41,36 @@ build_backend:
 # Build Frontend Docker Image
 build_frontend:
   stage: build_frontend
+  script:
+    - echo "Building frontend Docker image..."
+    - >
+      docker build \
+        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
+        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
+        -t $FRONTEND_IMAGE ./frontend
+    - echo "Pushing frontend Docker image to GitLab Container Registry..."
+    - docker push $FRONTEND_IMAGE
+  rules:
+    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
+
+# Deploy Backend
+deploy_backend:
+  stage: deploy_backend
+  script:
+    - echo "Deploying backend..."
+    # Add your backend deployment script here
+  rules:
+    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
+
+# Deploy Frontend to GitLab Pages
+deploy_frontend:
+  stage: deploy_frontend
+  script:
+    - echo "Deploying frontend to GitLab Pages..."
+    - mkdir -p public
+    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
