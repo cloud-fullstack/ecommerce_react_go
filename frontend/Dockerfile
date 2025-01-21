@@ -1,5 +1,5 @@
 # Use the official Node.js image as a build stage
-FROM node:16
+FROM node:14 AS build
 
 # Set the working directory to /frontend
 WORKDIR /app
@@ -24,8 +24,9 @@ ENV REACT_APP_DOMAIN_NAME=${REACT_APP_DOMAIN_NAME}
 # Build the application
 RUN npm run build
 
-# Copy the built app from the previous stage
-COPY --from=build /frontend/build /usr/share/nginx/html
+# Correct this line:
+COPY --from=build /app/build /usr/share/nginx/html
+
 
 # Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf

@@ -50,6 +50,9 @@ yarn-error.log*
 # Environment variables
 
 backend/.env
+frontend/.env
+/frontend/build/
+
 
 # IDE specific files
 .idea/
