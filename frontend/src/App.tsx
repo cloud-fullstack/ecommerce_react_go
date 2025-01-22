@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
@@ -7,7 +7,8 @@ import Footer from './components/Footer';
 import AllProductPage from './pages/AllProductPage';
 import SignIn from './pages/SignIn';
 import Cart from './pages/Cart';
-import { CSSProperties } from 'react';
+import MostLovedBlogs from './components/MostLovedBlogs';
+import DiscountedProducts from './components/DiscountedProducts';
 import './App.css';
 
 function App() {
@@ -30,7 +31,6 @@ function App() {
     localStorage.setItem('cookieAccepted', 'true');
   };
 
-  // Corrected useEffect
   useEffect(() => {
     console.log("Modal state changed:", showModal);
   }, [showModal]);
@@ -38,19 +38,34 @@ function App() {
   return (
     <main>
       <NavBar />
-      <div className="content">
+      <div className="App">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <Home
+                showModal={showModal}
+                openModal={openModal}
+                closeModal={closeModal}
+                cookieAccepted={cookieAccepted}
+                handleAcceptCookies={handleAcceptCookies}
+              />
+            }
+          />
           <Route path="/signIn" element={<SignIn />} />
-          <Route path="/products" element={<AllProductPage />} />
+          <Route path="/frontpage-product-previews" element={<AllProductPage />} />
           <Route path="/store/:storeID/:productID" element={<ProductPreview />} />
+          <Route path="/most-loved-recent-blogs" element={<MostLovedBlogs />} />
+          <Route
+            path="/discounted-products-frontpage"
+            element={<DiscountedProducts title="Hottest Sales & Discounts" />}
+          />
           <Route path="/cart" element={<Cart />} />
         </Routes>
       </div>
 
       <button onClick={openModal}>Open Modal</button>
 
-      {/* Render Cookie Popup if cookies are not accepted */}
       {!cookieAccepted && <CookiePopUp onAccept={handleAcceptCookies} />}
 
       <footer>
@@ -96,20 +111,13 @@ const CookiePopUp = ({ onAccept }: { onAccept: () => void }) => {
   );
 };
 
-// Styles for the container
-const styles: { [key: string]: CSSProperties } = {
+const styles = {
   container: {
-    marginTop: '70vh',
-    maxWidth: '20%',
-    position: 'fixed', // Explicitly typed as a valid CSS position value
-    marginLeft: '40vw',
-  },
-  '@media (min-width: 640px) and (max-width: 767px)': {
-    marginTop: '70vh',
-    maxWidth: '20%',
-    position: 'fixed', // Explicitly typed as a valid CSS position value
-    marginLeft: '30%',
-  },
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
+    zIndex: 1000,
+  } as CSSProperties,
 };
 
 export default App;

@@ -15,10 +15,14 @@ interface Product {
   discounted: boolean;
 }
 
-const DiscountedProducts = () => {
+interface DiscountedProductsProps {
+  title: string; // Add a title prop
+}
+
+const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
   const [discountedProducts, setDiscountedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // Allow `null` or `string`
+  const [error, setError] = useState<string | null>(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [numberOfCart, setNumberOfCart] = useState(4);
 
@@ -33,11 +37,10 @@ const DiscountedProducts = () => {
       if (data.error) throw new Error(data.message);
       setDiscountedProducts(data);
     } catch (err) {
-      // Handle the error safely
       if (err instanceof Error) {
-        setError(err.message); // Now TypeScript knows `err` is an Error object
+        setError(err.message);
       } else {
-        setError("An unknown error occurred"); // Handle non-Error types
+        setError("An unknown error occurred");
       }
     } finally {
       setLoading(false);
@@ -59,7 +62,7 @@ const DiscountedProducts = () => {
   // Fetch data on mount
   useEffect(() => {
     fetchDiscountedProducts();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   // Add event listener for screen size changes
   useEffect(() => {
@@ -69,12 +72,12 @@ const DiscountedProducts = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []); // Empty dependency array ensures this runs only once on mount and cleanup on unmount
+  }, []);
 
   // Update number of carousel items when screenWidth changes
   useEffect(() => {
-    handleResize(); // Call handleResize to update numberOfCart based on the current screenWidth
-  }, [screenWidth]); // Dependency array ensures this runs whenever screenWidth changes
+    handleResize();
+  }, [screenWidth]);
 
   if (loading) return <p>Loading Products...</p>;
   if (error) return <p style={{ textAlign: "center" }}>{error}</p>;
@@ -83,7 +86,7 @@ const DiscountedProducts = () => {
     <div className="carouselDiv">
       <div className="text-center titleSponsorised">
         <h2 className="animate__animated animate__fadeInDown pt-5 font-bold tracking-tight carouTitle">
-          Hot sales & Discount
+          {title} {/* Use the title prop here */}
         </h2>
       </div>
 
@@ -100,15 +103,14 @@ const DiscountedProducts = () => {
           centerSlidePercentage={100 / numberOfCart}
         >
           {discountedProducts.map((product, i) => {
-            // Map API data to the expected prop names
             const productProps = {
               name: product.product_name,
               storeID: product.store_id,
               productID: product.product_id,
               pictureLink: product.picture_link,
               price: product.price,
-              discountedPrice: product.discounted_price, // Map `discounted_price` to `discountedPrice`
-              discountActive: product.discounted, // Map `discounted` to `discountActive`
+              discountedPrice: product.discounted_price,
+              discountActive: product.discounted,
               index: i,
             };
 

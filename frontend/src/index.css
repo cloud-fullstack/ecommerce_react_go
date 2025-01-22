@@ -1,18 +1,36 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
-/* Your custom styles here */
+/* Global Resets */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: 'Inter', sans-serif; /* Ensure the font is consistent */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Ensure full height for the root element */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Utility Classes */
+.ellipse-container {
+  position: relative;
+  height: 400px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.ellipse-item {
+  position: absolute;
+  transition: all 0.3s ease;
+}
+
+/* Additional Global Styles */
+a {
+  text-decoration: none; /* Remove underline from links */
+  color: inherit; /* Inherit text color */
+}
+
+a:hover {
+  text-decoration: underline; /* Add underline on hover */
 }

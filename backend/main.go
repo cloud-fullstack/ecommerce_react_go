@@ -23,18 +23,30 @@ import (
 	"github.com/joho/godotenv"
 )
 
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v4/pgxpool
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/gin-contrib/cors"
+)
+
 func main() {
 	// Set up logging
-	log.SetHandler(cli.Default)
-
-	// Load environment variables from .env file (if it exists)
-	if err := loadEnv(); err != nil {
-		log.Warnf("Error loading .env file: %v", err)
-	}
+	log.SetHandler(cli.Default())
 
 	// Set default values and initialize router
-	port := getEnv("API_PORT", "8080")                                                  // Default port is 8080 if API_PORT is not set
-	staticDir := getEnv("STATIC_PATH", "/app/dist")                                     // Default static files directory
+	port := getEnv("API_PORT", "8080") // Default port is 8080 if API_PORT is not set
+	staticDir := getEnv("STATIC_PATH", "/app/dist") // Default static files directory
 	frontendURL := getEnv("REACT_APP_DOMAIN_NAME", "https://rezav.gitlab.io/rezaverse") // Use REACT_APP_DOMAIN_NAME for CORS
 
 	// Log the environment variables for debugging
@@ -83,12 +95,6 @@ func main() {
 	if err := r.Run(":" + port); err != nil {
 		log.Errorf("Server ended unexpectedly: %v", err)
 	}
-}
-
-// loadEnv loads environment variables from .env file
-func loadEnv() error {
-	env := getEnv("ENVIRONMENT", "development")
-	return godotenv.Load(".env." + env)
 }
 
 // getEnv retrieves environment variables with a fallback value
@@ -151,16 +157,17 @@ func setupAPIRoutes(r *gin.Engine, dbPool *pgxpool.Pool, s3Client *s3.S3) {
 	apiRouter := r.Group("/api")
 	apiRouter.Use(db.MiddlewareDB(dbPool))
 	{
-		apiRouter.GET("/cors", handler.CorsAnywhere)
-		apiRouter.GET("/avatar-blogs/:avatarKey", handler.BlogsByAvatarKey)
-		apiRouter.GET("/most-loved-recent-blogs/", handler.MostLovedRecentBlogs)
 		apiRouter.GET("/frontpage-product-previews/", handler.FrontpageProductPreviews)
-		apiRouter.GET("/discounted-products-frontpage/", handler.DiscountedProductsFrontpages)
 		apiRouter.GET("/store-details/:storeID", handler.StoreDetails)
+		apiRouter.GET("/most-loved-recent-blogs/", handler.MostLovedRecentBlogs)		
+		apiRouter.GET("/discounted-products-frontpage/", handler.DiscountedProductsFrontpages)
+		
 		apiRouter.POST("/get-avatar-product/", handler.GetAvatarProduct)
 		apiRouter.POST("/get-product-inventory-items/", handler.GetProductInventoryItems)
 		apiRouter.POST("/gen-token/", handler.GenToken)
 		apiRouter.POST("/profile-picture/", handler.GrabProfilePicture)
+		apiRouter.GET("/cors", handler.CorsAnywhere)
+		apiRouter.GET("/avatar-blogs/:avatarKey", handler.BlogsByAvatarKey)
 
 		slOnlyRouter := apiRouter.Group("")
 		{

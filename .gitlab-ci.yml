@@ -3,112 +3,60 @@ image: docker:latest
 services:
   - docker:dind
 
-before_script:
-  - echo "Setting up Docker..."
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
 stages:
-  - build_frontend
-  - build_backend
-  - deploy_frontend
-  - deploy_backend
+  - build
+  - deploy
 
-# Define the DEPLOY_FRONTEND variable internally (set to false by default)
+# Variables
 variables:
-  DEPLOY_FRONTEND: "false"  # Frontend deployment is disabled by default
-  DEPLOY_BACKEND: "true"    # Backend deployment is enabled by default
-  CI_REGISTRY: registry.gitlab.com
-  FRONTEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/frontend
-  BACKEND_IMAGE: $CI_REGISTRY/rezav/rezaverse/backend
+  CI_REGISTRY_IMAGE: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+  FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
+  BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
+  # Define environment variables for backend DB connection
+  DB_HOST: $CI_COMMIT_REF_NAME # You may customize this or fetch from GitLab secrets
+  DB_PORT: $CI_COMMIT_REF_NAME
+  DB_USER: $CI_COMMIT_REF_NAME
+  DB_PASSWORD: $CI_COMMIT_REF_NAME
+  DB_NAME: $CI_COMMIT_REF_NAME
+  DB_SSLMODE: $CI_COMMIT_REF_NAME
 
-# Debug: Print the value of DEPLOY_FRONTEND and DEPLOY_BACKEND
-debug_flags:
-  stage: build_frontend
-  script:
-    - |
-      echo "DEPLOY_FRONTEND is set to: $DEPLOY_FRONTEND"
-      echo "DEPLOY_BACKEND is set to: $DEPLOY_BACKEND"
-      echo "CI_REGISTRY is set to: $CI_REGISTRY"
-      echo "FRONTEND_IMAGE is set to: $FRONTEND_IMAGE"
-      echo "BACKEND_IMAGE is set to: $BACKEND_IMAGE"
-  rules:
-    - if: '$DEPLOY_FRONTEND == "true" || $DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
-
-# Debug: List files in the repository
-debug_files:
-  stage: build_backend
-  script:
-    - echo "Listing files in the repository..."
-    - ls -R
-  rules:
-    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
-
-# Build Frontend Docker Image
+# Build Frontend
 build_frontend:
-  stage: build_frontend
+  stage: build
   script:
     - echo "Building frontend Docker image..."
-    - >
-      docker build \
-        --build-arg REACT_APP_API_URL="https://rezav.gitlab.io/rezaverse/api" \
-        --build-arg REACT_APP_DOMAIN_NAME="https://rezav.gitlab.io/rezaverse" \
-        -t $FRONTEND_IMAGE ./frontend
-    - echo "Pushing frontend Docker image to GitLab Container Registry..."
+    - docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
   rules:
-    - if: '$DEPLOY_FRONTEND == "true"'
-      when: always
-    - when: never
+    - if: $CI_COMMIT_REF_NAME == "main"
 
-
-# Build Backend Docker Image
+# Build Backend
 build_backend:
-  stage: build_backend
+  stage: build
   script:
     - echo "Building backend Docker image..."
-    - >
-      docker build \
-        --build-arg API_PORT="$API_PORT" \
-        --build-arg STATIC_PATH="/app/dist" \
-        --build-arg DB_HOST="$DB_HOST" \
-        --build-arg DB_PORT="$DB_PORT" \
-        -t $BACKEND_IMAGE ./backend
-    - echo "Pushing backend Docker image to GitLab Container Registry..."
+    - docker build -f Dockerfile.backend -t $BACKEND_IMAGE .
     - docker push $BACKEND_IMAGE
   rules:
-    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
+    - if: $CI_COMMIT_REF_NAME == "main"
 
-
-# Deploy Frontend to GitLab Pages
-deploy_frontend:
-  stage: deploy_frontend
+# Deploy to GitLab Pages
+deploy:
+  stage: deploy
   script:
-    - echo "Deploying frontend to GitLab Pages..."
+    - echo "Deploying to GitLab Pages..."
     - mkdir -p public
-    - docker run --rm $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3
+    - docker run --rm \
+        -e DB_HOST=$DB_HOST \
+        -e DB_PORT=$DB_PORT \
+        -e DB_USER=$DB_USER \
+        -e DB_PASSWORD=$DB_PASSWORD \
+        -e DB_NAME=$DB_NAME \
+        -e DB_SSLMODE=$DB_SSLMODE \
+        $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3
+    - cp -r backend/bin/* public/api  # Ensure API is served under /api
   artifacts:
     paths:
       - public
   rules:
-    - if: '$DEPLOY_FRONTEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
-
-# Deploy Backend (Example: Deploy to Kubernetes or another platform)
-deploy_backend:
-  stage: deploy_backend
-  script:
-    - echo "Deploying backend..."
-    # Add your backend deployment script here (e.g., deploy to Kubernetes, DigitalOcean, etc.)
-    # Example:
-    # kubectl apply -f backend-deployment.yaml
-  rules:
-    - if: '$DEPLOY_BACKEND == "true" || $CI_COMMIT_REF_NAME == "main"'
-      when: always
-    - when: never
+    - if: $CI_COMMIT_REF_NAME == "main"
