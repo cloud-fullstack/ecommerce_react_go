@@ -40,19 +40,14 @@ deploy:
   stage: deploy
   script:
     - echo "Deploying to GitLab Pages..."
-    - |
-      export DB_CONNECTION_STRING="host=$DB_HOST port=$DB_PORT user=$DB_USER password=$DB_PASSWORD dbname=$DB_NAME sslmode=$DB_SSLMODE"
+    - export DB_CONNECTION_STRING="host=$DB_HOST port=$DB_PORT user=$DB_USER password=$DB_PASSWORD dbname=$DB_NAME sslmode=$DB_SSLMODE"
     - echo "DB Connection String: $DB_CONNECTION_STRING"  # Optional for debugging
     - echo "Frontend Image: $FRONTEND_IMAGE"  # Debugging line
     - mkdir -p public
-    - |
-      docker run --rm \
-        -e DB_CONNECTION_STRING=$DB_CONNECTION_STRING \
-        $FRONTEND_IMAGE sh -c "tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3"
+    - docker run --rm -e DB_CONNECTION_STRING=$DB_CONNECTION_STRING $FRONTEND_IMAGE sh -c "tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3"
     - cp -r backend/bin/* public/api  # Ensure API is served under /api
   artifacts:
     paths:
       - public
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
-
