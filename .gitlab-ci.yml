@@ -45,7 +45,6 @@ deploy:
   stage: deploy
   script:
     - echo "Deploying to GitLab Pages..."
-    # Compose the connection string using the environment variables
     - export DB_CONNECTION_STRING="host=$DB_HOST port=$DB_PORT user=$DB_USER password=$DB_PASSWORD dbname=$DB_NAME sslmode=$DB_SSLMODE"
     - echo "DB Connection String: $DB_CONNECTION_STRING"  # Optional: for debugging
     - mkdir -p public
