@@ -1,3 +1,5 @@
+# frontend/Dockerfile
+
 # Use an official Node.js runtime as a parent image
 FROM node:16
 
@@ -5,13 +7,13 @@ FROM node:16
 WORKDIR /app
 
 # Copy the package.json and package-lock.json (if they exist)
-COPY frontend/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the entire frontend directory into the container
-COPY frontend/ .
+COPY . .
 
 # Build the React app
 RUN npm run build

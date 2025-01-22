@@ -24,6 +24,9 @@ build_frontend:
     - echo "Building frontend Docker image..."
     - docker build -f frontend/Dockerfile -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
+  artifacts:
+    paths:
+      - frontend/build
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
 
