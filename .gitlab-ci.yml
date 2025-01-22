@@ -14,6 +14,10 @@ variables:
   DB_PASSWORD: $CI_COMMIT_REF_NAME
   DB_NAME: $CI_COMMIT_REF_NAME
   DB_SSLMODE: $CI_COMMIT_REF_NAME
+
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
 build_frontend:
   stage: build
   script:
@@ -22,6 +26,7 @@ build_frontend:
     - docker push $FRONTEND_IMAGE
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
+
 build_backend:
   stage: build
   script:
@@ -30,6 +35,7 @@ build_backend:
     - docker push $BACKEND_IMAGE
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
+
 deploy:
   stage: deploy
   script:
