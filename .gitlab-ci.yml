@@ -12,20 +12,20 @@ variables:
   CI_REGISTRY_IMAGE: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
   FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
   BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
-  # Define environment variables for backend DB connection
-  DB_HOST: $CI_COMMIT_REF_NAME # You may customize this or fetch from GitLab secrets
-  DB_PORT: $CI_COMMIT_REF_NAME
-  DB_USER: $CI_COMMIT_REF_NAME
-  DB_PASSWORD: $CI_COMMIT_REF_NAME
-  DB_NAME: $CI_COMMIT_REF_NAME
-  DB_SSLMODE: $CI_COMMIT_REF_NAME
+  # Define individual environment variables for backend DB connection
+  DB_HOST: $CI_COMMIT_REF_NAME  # Example, customize as needed
+  DB_PORT: $CI_COMMIT_REF_NAME  # Example, customize as needed
+  DB_USER: $CI_COMMIT_REF_NAME  # Example, customize as needed
+  DB_PASSWORD: $CI_COMMIT_REF_NAME  # Example, customize as needed
+  DB_NAME: $CI_COMMIT_REF_NAME  # Example, customize as needed
+  DB_SSLMODE: $CI_COMMIT_REF_NAME  # Example, customize as needed
 
 # Build Frontend
 build_frontend:
   stage: build
   script:
     - echo "Building frontend Docker image..."
-    - docker build -f Dockerfile.frontend -t $FRONTEND_IMAGE .
+    - docker build -f frontend/Dockerfile -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
@@ -35,7 +35,7 @@ build_backend:
   stage: build
   script:
     - echo "Building backend Docker image..."
-    - docker build -f Dockerfile.backend -t $BACKEND_IMAGE .
+    - docker build -f backend/Dockerfile -t $BACKEND_IMAGE .
     - docker push $BACKEND_IMAGE
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
@@ -45,14 +45,12 @@ deploy:
   stage: deploy
   script:
     - echo "Deploying to GitLab Pages..."
+    # Compose the connection string using the environment variables
+    - export DB_CONNECTION_STRING="host=$DB_HOST port=$DB_PORT user=$DB_USER password=$DB_PASSWORD dbname=$DB_NAME sslmode=$DB_SSLMODE"
+    - echo "DB Connection String: $DB_CONNECTION_STRING"  # Optional: for debugging
     - mkdir -p public
     - docker run --rm \
-        -e DB_HOST=$DB_HOST \
-        -e DB_PORT=$DB_PORT \
-        -e DB_USER=$DB_USER \
-        -e DB_PASSWORD=$DB_PASSWORD \
-        -e DB_NAME=$DB_NAME \
-        -e DB_SSLMODE=$DB_SSLMODE \
+        -e DB_CONNECTION_STRING=$DB_CONNECTION_STRING \
         $FRONTEND_IMAGE tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3
     - cp -r backend/bin/* public/api  # Ensure API is served under /api
   artifacts:
