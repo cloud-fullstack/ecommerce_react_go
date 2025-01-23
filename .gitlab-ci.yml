@@ -24,9 +24,6 @@ build_frontend:
     - echo "Building frontend Docker image..."
     - docker build -f frontend/Dockerfile -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
-  artifacts:
-    paths:
-      - frontend/build
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
 
@@ -39,27 +36,26 @@ build_backend:
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
 
-build_frontend:
-  stage: build
-  script:
-    - echo "Building frontend Docker image..."
-    - docker build -f frontend/Dockerfile -t $FRONTEND_IMAGE .
-    - docker push $FRONTEND_IMAGE
-  artifacts:
-    paths:
-      - frontend/build
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "main"
-
 deploy:
   stage: deploy
   dependencies:
-    - build_frontend  # Ensure deploy job depends on build_frontend
+  - build_frontend
   script:
-    - echo "Deploying to GitLab Pages..."
-    - mkdir -p public
-    - cp -r frontend/build/* public/  # Copy the built frontend files to the public directory
-    - cp -r backend/bin/* public/api  # Ensure the backend API is under /api
+    - >
+      echo "Deploying to GitLab Pages..."
+    - >
+      export DB_CONNECTION_STRING="host=$DB_HOST port=$DB_PORT user=$DB_USER
+      password=$DB_PASSWORD dbname=$DB_NAME sslmode=$DB_SSLMODE"
+    - >
+      echo "DB Connection String: $DB_CONNECTION_STRING"
+    - >
+      mkdir -p public
+    - >
+      docker run --rm -e DB_CONNECTION_STRING=$DB_CONNECTION_STRING
+      $FRONTEND_IMAGE sh -c "tar -cf - /usr/share/nginx/html | tar -xf - -C
+      public --strip-components=3"
+    - >
+      cp -r backend/bin/* public/api
   artifacts:
     paths:
       - public
