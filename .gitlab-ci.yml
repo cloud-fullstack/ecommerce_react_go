@@ -40,15 +40,15 @@ build_backend:
 deploy:
   stage: deploy
   dependencies:
-    - build_frontend
+    - build_frontend  # Ensure this job runs after build_frontend
   script:
-    - mkdir -p public
+    - mkdir -p public  # Create the public directory on the host
     - >-
-      docker run --rm -e "DB_CONNECTION_STRING=$DB_CONNECTION_STRING" $FRONTEND_IMAGE
-      sh -c "tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3"
-    - cp -r backend/bin/* public/api
+      docker run --rm -v "$(pwd)/public:/public" $FRONTEND_IMAGE
+      sh -c "cd /usr/share/nginx/html && tar -cf - . | tar -xf - -C /public"
+    - cp -r backend/bin/* public/api  # Copy backend files if needed
   artifacts:
     paths:
-      - public
+      - public  # Save the public directory as an artifact
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
