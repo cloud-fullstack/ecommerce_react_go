@@ -1,7 +1,7 @@
 # Use the official Node.js image as a build stage
-FROM node:14 AS build
+FROM node:14 AS builder
 
-# Set the working directory to /frontend
+# Set the working directory to /app
 WORKDIR /app
 
 # Copy package.json and package-lock.json
@@ -16,9 +16,11 @@ COPY frontend/ .
 # Build the application
 RUN npm run build
 
-# Correct this line:
-COPY --from=build /app/build /usr/share/nginx/html
+# Use the official Nginx image for the production stage
+FROM nginx:stable
 
+# Correct this line by referencing the named stage 'builder'
+COPY --from=builder /app/build /usr/share/nginx/html
 
 # Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -27,4 +29,4 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # Command to run the app
-CMD ["/usr/sbin/nginx", "-g", "daemon off;"]  
+CMD ["nginx", "-g", "daemon off;"]
