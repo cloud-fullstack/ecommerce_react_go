@@ -47,6 +47,7 @@ build_backend:
 deploy:
   stage: deploy
   dependencies:
+    - build_backend
     - build_frontend  # Ensure this job runs after build_frontend
   script:
     - echo "Deploying to GitLab Pages..."
