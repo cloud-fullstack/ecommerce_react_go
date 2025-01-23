@@ -21,8 +21,10 @@ before_script:
 build_frontend:
   stage: build
   script:
+    - echo "Setting PUBLIC_URL..."
+    - export PUBLIC_URL="/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/file/public"
     - echo "Building frontend Docker image..."
-    - docker build -f frontend/Dockerfile -t $FRONTEND_IMAGE .
+    - docker build -f frontend/Dockerfile --build-arg PUBLIC_URL=$PUBLIC_URL -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
   rules:
     - if: '$CI_COMMIT_REF_NAME == "main"'
