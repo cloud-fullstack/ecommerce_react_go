@@ -15,11 +15,6 @@ variables:
   DB_NAME: $CI_COMMIT_REF_NAME
   DB_SSLMODE: $CI_COMMIT_REF_NAME
 
-# Define the cache settings for node_modules to speed up the build process
-cache:
-  paths:
-    - frontend/node_modules/
-
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
@@ -28,7 +23,6 @@ build_frontend:
   script:
     - echo "Setting PUBLIC_URL..."
     - export PUBLIC_URL="https://gitlab.com/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/file/public"
-    - echo "PUBLIC_URL is set to: $PUBLIC_URL"
     - echo "Building frontend Docker image..."
     - docker build -f frontend/Dockerfile --build-arg PUBLIC_URL=$PUBLIC_URL -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
