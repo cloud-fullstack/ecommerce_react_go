@@ -25,7 +25,7 @@ build_frontend:
     - docker build -f frontend/Dockerfile -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
   rules:
-    - if: $CI_COMMIT_REF_NAME == "main"
+    - if: '$CI_COMMIT_REF_NAME == "main"'
 
 build_backend:
   stage: build
@@ -34,8 +34,7 @@ build_backend:
     - docker build -f backend/Dockerfile -t $BACKEND_IMAGE .
     - docker push $BACKEND_IMAGE
   rules:
-    - if: $CI_COMMIT_REF_NAME == "main"
-
+    - if: '$CI_COMMIT_REF_NAME == "main"'
 
 deploy:
   stage: deploy
@@ -50,4 +49,4 @@ deploy:
     paths:
       - public  # Save the public directory as an artifact
   rules:
-    - if: $CI_COMMIT_REF_NAME == 
+    - if: '$CI_COMMIT_REF_NAME == "main"'
