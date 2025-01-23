@@ -36,3 +36,19 @@ build_backend:
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
 
+
+deploy:
+  stage: deploy
+  dependencies:
+    - build_frontend
+  script:
+    - mkdir -p public
+    - >-
+      docker run --rm -e "DB_CONNECTION_STRING=$DB_CONNECTION_STRING" $FRONTEND_IMAGE
+      sh -c "tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3"
+    - cp -r backend/bin/* public/api
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
