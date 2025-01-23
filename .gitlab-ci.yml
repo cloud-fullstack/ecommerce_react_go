@@ -33,6 +33,14 @@ build_backend:
     - echo "Building backend Docker image..."
     - docker build -f backend/Dockerfile -t $BACKEND_IMAGE .
     - docker push $BACKEND_IMAGE
+    - echo "Extracting backend binary from the Docker image..."
+    - mkdir -p backend/bin
+    - docker create --name temp-container $BACKEND_IMAGE
+    - docker cp temp-container:/app/main backend/bin/main
+    - docker rm temp-container
+  artifacts:
+    paths:
+      - backend/bin
   rules:
     - if: '$CI_COMMIT_REF_NAME == "main"'
 
