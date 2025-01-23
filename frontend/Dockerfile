@@ -1,21 +1,30 @@
-# frontend/Dockerfile
+# Use the official Node.js image as a build stage
+FROM node:14 AS build
 
-# Use an official Node.js runtime as a parent image
-FROM node:16
-
-# Set the working directory in the container
+# Set the working directory to /frontend
 WORKDIR /app
 
-# Copy the package.json and package-lock.json (if they exist)
-COPY package*.json ./
+# Copy package.json and package-lock.json
+COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the entire frontend directory into the container
-COPY . .
+# Copy the rest of the application code
+COPY frontend/ .
 
-# Build the React app
+# Build the application
 RUN npm run build
 
-# No CMD or EXPOSE here since GitLab Pages will handle hosting the static files.
+# Correct this line:
+COPY --from=build /app/build /usr/share/nginx/html
+
+
+# Copy custom Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose the port the app runs on
+EXPOSE 80
+
+# Command to run the app
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]  
