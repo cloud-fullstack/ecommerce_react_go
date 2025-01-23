@@ -1,32 +1,24 @@
-# Use the official Node.js image as a build stage
-FROM node:14 AS builder
+# Use an official Node.js runtime as a parent image
+FROM node:16
 
-# Set the working directory to /app
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy the package.json and package-lock.json (if they exist)
 COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the entire frontend directory into the container
 COPY frontend/ .
 
-# Build the application
+# Build the React app
 RUN npm run build
 
-# Use the official Nginx image for the production stage
-FROM nginx:stable
+# Serve the build folder (if needed)
+RUN npm install -g serve
+CMD ["serve", "-s", "build"]
 
-# Correct this line by referencing the named stage 'builder'
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose the port the app runs on
-EXPOSE 80
-
-# Command to run the app
-CMD ["nginx", "-g", "daemon off;"]
+# Expose the port that serve will run on
+EXPOSE 5000
