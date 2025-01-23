@@ -38,7 +38,8 @@ build_backend:
 
 deploy:
   stage: deploy
-  script:
+  dependencies:
+  - build_frontend
     - >
       echo "Deploying to GitLab Pages..."
     - >
