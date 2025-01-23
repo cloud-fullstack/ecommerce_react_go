@@ -39,8 +39,22 @@ build_backend:
   rules:
     - if: $CI_COMMIT_REF_NAME == "main"
 
+build_frontend:
+  stage: build
+  script:
+    - echo "Building frontend Docker image..."
+    - docker build -f frontend/Dockerfile -t $FRONTEND_IMAGE .
+    - docker push $FRONTEND_IMAGE
+  artifacts:
+    paths:
+      - frontend/build
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+
 deploy:
   stage: deploy
+  dependencies:
+    - build_frontend  # Ensure deploy job depends on build_frontend
   script:
     - echo "Deploying to GitLab Pages..."
     - mkdir -p public
