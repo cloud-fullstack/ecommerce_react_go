@@ -52,7 +52,9 @@ deploy:
       sslmode=$DB_SSLMODE"
     - echo "DB Connection String: $DB_CONNECTION_STRING"
     - mkdir -p public
-    - docker run --rm -e "DB_CONNECTION_STRING=$DB_CONNECTION_STRING" $FRONTEND_IMAGE sh -c "tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3"
+    - >-
+      docker run --rm -e "DB_CONNECTION_STRING=$DB_CONNECTION_STRING" $FRONTEND_IMAGE
+      sh -c "tar -cf - /usr/share/nginx/html | tar -xf - -C public --strip-components=3"
     - cp -r backend/bin/* public/api
   artifacts:
     paths:
