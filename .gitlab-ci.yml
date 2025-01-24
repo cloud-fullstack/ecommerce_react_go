@@ -22,12 +22,26 @@ build_frontend:
   stage: build
   script:
     - echo "Setting PUBLIC_URL..."
-    - export PUBLIC_URL="/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/file/public"
+    - export PUBLIC_URL="/rezaverse"  # Set PUBLIC_URL for GitLab Pages
+    - echo "PUBLIC_URL is set to: $PUBLIC_URL"
+
+    # Build the frontend Docker image
     - echo "Building frontend Docker image..."
     - docker build -f frontend/Dockerfile --build-arg PUBLIC_URL=$PUBLIC_URL -t $FRONTEND_IMAGE .
+
+    # Push the Docker image to the container registry
     - docker push $FRONTEND_IMAGE
+
+    # Extract the build artifacts from the Docker image
+    - mkdir -p build
+    - docker create --name temp-container $FRONTEND_IMAGE
+    - docker cp temp-container:/app/build/. build/
+    - docker rm temp-container
+  artifacts:
+    paths:
+      - build  # Save the build folder as an artifact
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
 build_backend:
   stage: build
