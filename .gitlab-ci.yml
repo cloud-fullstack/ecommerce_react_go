@@ -1,52 +1,37 @@
-image: 'docker:latest'
-services:
-  - 'docker:dind'
 stages:
   - build
   - deploy
-variables:
-  CI_REGISTRY_IMAGE: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-  FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
-  BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
-  DB_HOST: $CI_COMMIT_REF_NAME
-  DB_PORT: $CI_COMMIT_REF_NAME
-  DB_USER: $CI_COMMIT_REF_NAME
-  DB_PASSWORD: $CI_COMMIT_REF_NAME
-  DB_NAME: $CI_COMMIT_REF_NAME
-  DB_SSLMODE: $CI_COMMIT_REF_NAME
 
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
+# Frontend build job
 build_frontend:
   stage: build
   script:
     - echo "Setting PUBLIC_URL..."
-    - export PUBLIC_URL="https://gitlab.com/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/file/public"
-    - echo "Building frontend Docker image..."
-    - docker build -f frontend/Dockerfile --build-arg PUBLIC_URL=$PUBLIC_URL -t $FRONTEND_IMAGE .
-    - docker push $FRONTEND_IMAGE
+    - export PUBLIC_URL="/rezaverse"  # Set PUBLIC_URL for GitLab Pages
+    - echo "PUBLIC_URL is set to: $PUBLIC_URL"
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build  # Save the build folder as an artifact
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
+# Backend build job
 build_backend:
   stage: build
   script:
-    - echo "Building backend Docker image..."
-    - docker build -f backend/Dockerfile -t $BACKEND_IMAGE .
-    - docker push $BACKEND_IMAGE
-    - echo "Extracting backend binary from the Docker image..."
-    - mkdir -p backend/bin
-    - docker create --name temp-container $BACKEND_IMAGE
-    - docker cp temp-container:/app/main backend/bin/main
-    - docker rm temp-container
+    - echo "Building backend..."
+    - cd backend
+    - ./build.sh  # Replace with your backend build command
   artifacts:
     paths:
-      - backend/bin
+      - backend/bin  # Save the backend build output as an artifact
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
-deploy:
+# Combined deploy job (replaces the old `deploy` job)
+pages:
   stage: deploy
   dependencies:
     - build_backend
@@ -54,10 +39,18 @@ deploy:
   script:
     - echo "Deploying to GitLab Pages..."
     - mkdir -p public  # Create the public directory on the host
-    - docker run --rm -v "$(pwd)/public:/public" $FRONTEND_IMAGE sh -c "cd /app/build && tar -cf - . | tar -xf - -C /public"
-    - cp -r backend/bin/* public/api  # Copy backend files if needed
+
+    # Copy frontend build artifacts to the public directory
+    - mv build/* public/
+
+    # Copy backend build artifacts to the public/api directory
+    - mkdir -p public/api
+    - cp -r backend/bin/* public/api/
+
+    # Optionally, print the directory structure for debugging
+    - ls -R public
   artifacts:
     paths:
-      - public  # Save the public directory as an artifact
+      - public  # The folder that contains the files to be exposed at the Page URL
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
