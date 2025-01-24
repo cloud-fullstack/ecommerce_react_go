@@ -22,7 +22,8 @@ build_frontend:
   stage: build
   script:
     - echo "Setting PUBLIC_URL..."
-    - export PUBLIC_URL="/rezaverse" 
+    - export PUBLIC_URL="/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/file/public"
+    - echo "Building frontend Docker image..."
     - docker build -f frontend/Dockerfile --build-arg PUBLIC_URL=$PUBLIC_URL -t $FRONTEND_IMAGE .
     - docker push $FRONTEND_IMAGE
   rules:
@@ -45,7 +46,7 @@ build_backend:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "main"'
 
-deploy:
+pages:
   stage: deploy
   dependencies:
     - build_backend
@@ -54,6 +55,7 @@ deploy:
     - echo "Deploying to GitLab Pages..."
     - mkdir -p public  # Create the public directory on the host
     - docker run --rm -v "$(pwd)/public:/public" $FRONTEND_IMAGE sh -c "cd /app/build && tar -cf - . | tar -xf - -C /public"
+    - mkdir -p public/api
     - cp -r backend/bin/* public/api  # Copy backend files if needed
   artifacts:
     paths:
