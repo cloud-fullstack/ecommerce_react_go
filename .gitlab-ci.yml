@@ -18,20 +18,16 @@ variables:
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
-# Frontend build job
 build_frontend:
   stage: build
   script:
     - echo "Setting PUBLIC_URL..."
-    - export PUBLIC_URL="/rezaverse"  # Set PUBLIC_URL for GitLab Pages
-    - echo "PUBLIC_URL is set to: $PUBLIC_URL"
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - build  # Save the build folder as an artifact
+    - export PUBLIC_URL="/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/file/public"
+    - echo "Building frontend Docker image..."
+    - docker build -f frontend/Dockerfile --build-arg PUBLIC_URL=$PUBLIC_URL -t $FRONTEND_IMAGE .
+    - docker push $FRONTEND_IMAGE
   rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+    - if: '$CI_COMMIT_REF_NAME == "main"'
 
 build_backend:
   stage: build
