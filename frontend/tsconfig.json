@@ -14,10 +14,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["react", "react-dom"],
-    "baseUrl": "src", // Add this line
+    "types": ["react", "react-dom", "node"],  // Add "node" here
+    "baseUrl": "src",
     "paths": {
-      "@components/*": ["components/*"] // Add this line
+      "@components/*": ["components/*"]
     }
   },
   "include": ["src"],
