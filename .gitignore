@@ -52,7 +52,7 @@ yarn-error.log*
 # Environment variables
 
 
-frontend/.env
+
 /frontend/build/
 
 
