@@ -10,6 +10,8 @@ backend/vendor/
 !go.sum
 !main.go
 !config.sh
+!backend/.env
+
 
 
 # Ignore temporary Dockerfiles and scripts (if not needed)
@@ -49,7 +51,7 @@ yarn-error.log*
 
 # Environment variables
 
-backend/.env
+
 frontend/.env
 /frontend/build/
 

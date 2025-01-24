@@ -55,6 +55,7 @@ pages:
     - echo "Deploying to GitLab Pages..."
     - mkdir -p public  # Create the public directory on the host
     - docker run --rm -v "$(pwd)/public:/public" $FRONTEND_IMAGE sh -c "cd /app/build && tar -cf - . | tar -xf - -C /public"
+    - docker run --rm -v "$(pwd)/public:/public" $FRONTEND_IMAGE sh -c "cd /app/build && tar -cf - . | tar -xf - -C /public"
     - mkdir -p public/api
     - cp -r backend/bin/* public/api  # Copy backend files if needed
   artifacts:
