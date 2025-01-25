@@ -88,7 +88,7 @@ func getEnv(key, fallback string) string {
 // configureCORS sets up CORS middleware
 func configureCORS(r *gin.Engine, frontendURL string) {
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{frontendURL, "https://rezav.onrender.com"} // Use frontendURL for CORS
+	corsConfig.AllowOrigins = []string{frontendURL, "https://rezaverse.onrender.com"} // Use frontendURL for CORS
 	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
 	corsConfig.AllowCredentials = true // Enable if your app sends credentials

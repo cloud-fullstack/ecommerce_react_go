@@ -28,7 +28,7 @@ const NavBar = () => {
   const fetchProductPreviews = async () => {
     setIsSearchLoading(true);
     try {
-      const res = await apiClient.get("/api/frontpage-product-previews/");
+      const res = await apiClient.get("/frontpage-product-previews/");
       const data = res.data;
       if (data.error) throw new Error(data.message);
       setSearchedProducts(data);
