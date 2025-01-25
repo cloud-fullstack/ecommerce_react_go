@@ -29,11 +29,6 @@ func main() {
 	staticDir := getEnv("STATIC_PATH", "/app/dist")                              // Default static files directory
 	frontendURL := getEnv("REACT_APP_DOMAIN_NAME", "https://rezav.onrender.com") // Use REACT_APP_DOMAIN_NAME for CORS
 
-	// Log the environment variables for debugging
-	log.Infof("API_PORT: %s", port)
-	log.Infof("STATIC_PATH: %s", staticDir)
-	log.Infof("REACT_APP_DOMAIN_NAME: %s", frontendURL)
-
 	// Initialize Gin and CORS configuration
 	r := gin.New()
 	r.RedirectTrailingSlash = false
@@ -88,7 +83,7 @@ func getEnv(key, fallback string) string {
 // configureCORS sets up CORS middleware
 func configureCORS(r *gin.Engine, frontendURL string) {
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{frontendURL, "https://rezaverse.onrender.com"} // Use frontendURL for CORS
+	corsConfig.AllowOrigins = []string{frontendURL} // Use frontendURL for CORS
 	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
 	corsConfig.AllowCredentials = true // Enable if your app sends credentials
