@@ -25,9 +25,9 @@ func main() {
 	// Set up logging
 
 	// Set default values and initialize router
-	port := getEnv("API_PORT", "8080")                                               // Default port is 8080 if API_PORT is not set
-	staticDir := getEnv("STATIC_PATH", "/app/dist")                                  // Default static files directory
-	frontendURL := getEnv("REACT_APP_DOMAIN_NAME", "https://rezaverse.onrender.com") // Use REACT_APP_DOMAIN_NAME for CORS
+	port := getEnv("API_PORT", "8080")                                           // Default port is 8080 if API_PORT is not set
+	staticDir := getEnv("STATIC_PATH", "/app/dist")                              // Default static files directory
+	frontendURL := getEnv("REACT_APP_DOMAIN_NAME", "https://rezav.onrender.com") // Use REACT_APP_DOMAIN_NAME for CORS
 
 	// Log the environment variables for debugging
 	log.Infof("API_PORT: %s", port)

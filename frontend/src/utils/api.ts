@@ -6,7 +6,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
- // withCredentials: true, // Enable credentials (cookies, authorization headers)
+  // withCredentials: true, // Enable credentials (cookies, authorization headers)
 });
 
 // Optional: Add request/response interceptors for global error handling or token injection
