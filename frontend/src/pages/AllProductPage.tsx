@@ -55,13 +55,13 @@ const Products = () => {
       const res = await apiClient.get("/frontpage-product-previews/");
       const data = res.data; // Use `res.data` instead of `res.json()`
       if (data.error) throw new Error(data.message);
-
+  
       // Ensure `discounted` is always a boolean
       const products = data.map((product: any) => ({
         ...product,
         discounted: product.discounted || false, // Default to `false` if `discounted` is missing
       }));
-
+  
       setListOfProducts(products);
     } catch (err) {
       console.error("Error fetching products:", err);
