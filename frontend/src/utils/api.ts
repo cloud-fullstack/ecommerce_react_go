@@ -6,6 +6,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+ // withCredentials: true, // Enable credentials (cookies, authorization headers)
 });
 
 // Optional: Add request/response interceptors for global error handling or token injection
@@ -30,6 +31,13 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       window.location.href = '/SignIn'; // Redirect to the SignIn page
     }
+
+    // Handle CORS errors
+    if (error.response?.status === 403 && error.response?.data?.message === 'CORS error') {
+      console.error('CORS error: Request blocked by browser');
+      alert('CORS error: Request blocked by browser. Please check your backend CORS configuration.');
+    }
+
     return Promise.reject(error);
   }
 );
