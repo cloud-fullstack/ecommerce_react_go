@@ -25,9 +25,9 @@ func main() {
 	// Set up logging
 
 	// Set default values and initialize router
-	port := getEnv("API_PORT", "8080")                                           // Default port is 8080 if API_PORT is not set
-	staticDir := getEnv("STATIC_PATH", "/app/dist")                              // Default static files directory
-	frontendURL := getEnv("REACT_APP_DOMAIN_NAME", "https://rezav.onrender.com") // Use REACT_APP_DOMAIN_NAME for CORS
+	port := getEnv("API_PORT", "8080")                                               // Default port is 8080 if API_PORT is not set
+	staticDir := getEnv("STATIC_PATH", "/app/dist")                                  // Default static files directory
+	frontendURL := getEnv("REACT_APP_DOMAIN_NAME", "https://rezaverse.onrender.com") // Use REACT_APP_DOMAIN_NAME for CORS
 
 	// Log the environment variables for debugging
 	log.Infof("API_PORT: %s", port)
@@ -86,15 +86,15 @@ func getEnv(key, fallback string) string {
 }
 
 // configureCORS sets up CORS middleware
-	func configureCORS(r *gin.Engine, frontendURL string) {
-		corsConfig := cors.DefaultConfig()
-		corsConfig.AllowOrigins = []string{frontendURL, "https://rezav.onrender.com"} // Use frontendURL for CORS
-		corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-		corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
-		corsConfig.AllowCredentials = true // Enable if your app sends credentials
-		corsConfig.MaxAge = 12 * time.Hour // Cache preflight requests for 12 hours
-		r.Use(cors.New(corsConfig))
-	}
+func configureCORS(r *gin.Engine, frontendURL string) {
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{frontendURL, "https://rezav.onrender.com"} // Use frontendURL for CORS
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
+	corsConfig.AllowCredentials = true // Enable if your app sends credentials
+	corsConfig.MaxAge = 12 * time.Hour // Cache preflight requests for 12 hours
+	r.Use(cors.New(corsConfig))
+}
 
 // initDB initializes the database connection
 func initDB() (*pgxpool.Pool, error) {
