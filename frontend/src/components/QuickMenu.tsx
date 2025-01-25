@@ -52,7 +52,7 @@ const QuickMenu = () => {
       // Use apiClient.post for POST requests
       apiClient
         .post(
-          "/api/heartbeat-hud/", // Endpoint URL
+          "/heartbeat-hud/", // Endpoint URL
           { avatar_key: aviKey }, // Request body
           {
             headers: {

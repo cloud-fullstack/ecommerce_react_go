@@ -39,7 +39,7 @@ const SignIn = () => {
   // Handle Second Life Sign In
   const handleSecondLifeSignIn = async () => {
     try {
-      const response = await apiClient.post("/api/gen-token/", {
+      const response = await apiClient.post("/gen-token/", {
         hash: "shopaTMAC#3", // Replace with actual hash logic
         legacy_name: "user", // Replace with actual user name
         avatar_key: "user-key" // Replace with actual avatar key

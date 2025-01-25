@@ -33,7 +33,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
       throw new Error("not signed in");
     }
     try {
-      const response = await apiClient.post("/api/heartbeat-hud/", {
+      const response = await apiClient.post("/heartbeat-hud/", {
         avatar_key: aviKey,
       });
       if (response.data.error) {
@@ -66,12 +66,12 @@ const BuyDialog: React.FC<BuyDialogProps> = ({ demoProduct, resendOrderID, onClo
     try {
       let response;
       if (resendOrderID) {
-        response = await apiClient.post("/api/resend-order/", {
+        response = await apiClient.post("/resend-order/", {
           avatar_buyer: aviKey,
           order_id: resendOrderID,
         });
       } else {
-        response = await apiClient.post("/api/create-order/", {
+        response = await apiClient.post("/create-order/", {
           avatar_buyer: aviKey,
           order_lines: orderLines,
           avatar_key: aviKey,
