@@ -30,7 +30,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
   const fetchDiscountedProducts = async () => {
     setLoading(true);
     try {
-      const res = await apiClient.get("/discounted-products-frontpage/", {
+      const res = await apiClient.get("/api/discounted-products-frontpage/", {
         method: "GET",
       });
       const data = res.data;

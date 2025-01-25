@@ -17,7 +17,7 @@ const MostLovedBlogs = () => {
     setLoading(true);
     setError(null); // Reset error state before fetching
     try {
-      const res = await apiClient.get("/most-loved-recent-blogs/", {
+      const res = await apiClient.get("/api/most-loved-recent-blogs/", {
         method: "GET",
       });
       const data = res.data;
