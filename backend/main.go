@@ -86,15 +86,15 @@ func getEnv(key, fallback string) string {
 }
 
 // configureCORS sets up CORS middleware
-func configureCORS(r *gin.Engine, frontendURL string) {
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{frontendURL, "https://rezav.onrender.com"} // Use frontendURL for CORS
-	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
-	corsConfig.AllowCredentials = true // Enable if your app sends credentials
-	corsConfig.MaxAge = 12 * time.Hour // Cache preflight requests for 12 hours
-	r.Use(cors.New(corsConfig))
-}
+	func configureCORS(r *gin.Engine, frontendURL string) {
+		corsConfig := cors.DefaultConfig()
+		corsConfig.AllowOrigins = []string{frontendURL, "https://rezav.onrender.com"} // Use frontendURL for CORS
+		corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+		corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
+		corsConfig.AllowCredentials = true // Enable if your app sends credentials
+		corsConfig.MaxAge = 12 * time.Hour // Cache preflight requests for 12 hours
+		r.Use(cors.New(corsConfig))
+	}
 
 // initDB initializes the database connection
 func initDB() (*pgxpool.Pool, error) {

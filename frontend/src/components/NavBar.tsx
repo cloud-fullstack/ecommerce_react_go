@@ -34,7 +34,7 @@ const NavBar = () => {
       setSearchedProducts(data);
     } catch (err) {
       console.error(err);
-      // Display a user-friendly error message
+      alert("Failed to fetch product previews. Please try again later.");
     } finally {
       setIsSearchLoading(false);
     }
