@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES6",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -14,11 +17,12 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["react", "react-dom", "node"],  // Add "node" here
+    "types": ["react", "react-dom", "node"],
     "baseUrl": "src",
     "paths": {
       "@components/*": ["components/*"]
-    }
+    },
+    "incremental": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
