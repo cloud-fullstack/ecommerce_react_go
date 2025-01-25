@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y nginx
 RUN mkdir -p /var/www/html && cp -r build/* /var/www/html/
 
 # Copy the Nginx configuration file
-COPY frontend/nginx.conf /etc/nginx/sites-available/default
+COPY ../nginx.conf /etc/nginx/sites-available/default
 
 # Expose port 80
 EXPOSE 80
