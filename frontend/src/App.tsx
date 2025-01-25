@@ -1,4 +1,4 @@
-import React, { useState, useEffect, CSSProperties } from 'react';
+import { useState, useEffect, CSSProperties } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
@@ -17,6 +17,8 @@ function App() {
     localStorage.getItem('cookieAccepted') === 'true'
   );
   const location = useLocation();
+
+  console.log("location" ,location);
 
   const openModal = () => {
     setShowModal(true);

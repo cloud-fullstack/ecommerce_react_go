@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useStore from "../../stores/useStore";
 import "animate.css";
 import apiClient from '../../utils/api';

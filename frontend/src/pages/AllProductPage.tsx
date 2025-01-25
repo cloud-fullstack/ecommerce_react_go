@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ProductPreview from '../components/ProductPreview';
@@ -52,7 +52,7 @@ const Products = () => {
   // Fetch products on mount
   const fetchProducts = async () => {
     try {
-      const res = await apiClient.get("/api/frontpage-product-previews/");
+      const res = await apiClient.get("/frontpage-product-previews/");
       const data = res.data; // Use `res.data` instead of `res.json()`
       if (data.error) throw new Error(data.message);
 

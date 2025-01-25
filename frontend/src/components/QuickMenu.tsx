@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import useStore from "../stores/useStore";
 import SignInInstructions from "./SignInInstructions"; // Assuming you have this component
 import apiClient from '../utils/api';

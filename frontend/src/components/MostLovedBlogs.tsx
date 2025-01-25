@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -17,7 +17,7 @@ const MostLovedBlogs = () => {
     setLoading(true);
     setError(null); // Reset error state before fetching
     try {
-      const res = await apiClient.get("/api/most-loved-recent-blogs/", {
+      const res = await apiClient.get("/most-loved-recent-blogs/", {
         method: "GET",
       });
       const data = res.data;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import  useStore  from "../stores/useStore"; // Zustand store for global state
 
 import "animate.css";

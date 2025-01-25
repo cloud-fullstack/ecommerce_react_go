@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ProductPreview from "./ProductPreview";
@@ -30,7 +30,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
   const fetchDiscountedProducts = async () => {
     setLoading(true);
     try {
-      const res = await apiClient.get("/api/discounted-products-frontpage/", {
+      const res = await apiClient.get("/discounted-products-frontpage/", {
         method: "GET",
       });
       const data = res.data;

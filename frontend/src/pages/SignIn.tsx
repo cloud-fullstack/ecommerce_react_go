@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'animate.css';
 import apiClient from '../utils/api'; // Import the centralized API client
