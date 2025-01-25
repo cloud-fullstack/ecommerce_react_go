@@ -34,3 +34,15 @@ a {
 a:hover {
   text-decoration: underline; /* Add underline on hover */
 }
+
+.carouselPic {
+  width: 100%; /* Full width of the container */
+  height: 200px; /* Fixed height */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
+  border-radius: 8px; /* Optional: Add rounded corners */
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0; /* Prevent the container from shrinking */
+  width: 100%; /* Full width of the container */
+}

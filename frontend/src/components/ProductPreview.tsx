@@ -36,31 +36,31 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
 
   return (
     <div className="productDisplay" key={index}>
-      <a href={storeID && productID ? `/store/${storeID}/${productID}` : "#"}>
-        {/* Product Image */}
-        <img
-          src={pictureLink}
-          alt={name}
-          className="carouselPic aspect-h-1 w-full overflow-hidden bg-gray-200 group-hover:opacity-75 lg:aspect-none"
-          onError={(e) => {
-            // Fallback to a placeholder image if the provided image fails to load
-            e.currentTarget.src = "https://via.placeholder.com/150";
-          }}
-        />
+  <a href={storeID && productID ? `/store/${storeID}/${productID}` : "#"}>
+    {/* Product Image */}
+    <img
+      src={pictureLink}
+      alt={name}
+      className="carouselPic w-full h-48 object-cover" // Fixed height and width
+      onError={(e) => {
+        // Fallback to a placeholder image if the provided image fails to load
+        e.currentTarget.src = "https://via.placeholder.com/150";
+      }}
+    />
 
-        {/* Product Details */}
-        <div className="nameTitle aspect-h-1 w-full overflow-hidden bg-gray-200 group-hover:opacity-75 lg:aspect-none shadow-lg">
-          {/* Product Name */}
-          <span className="productN">{truncatedName}</span>
+    {/* Product Details */}
+    <div className="nameTitle mt-2 p-2 bg-white shadow-lg">
+      {/* Product Name */}
+      <span className="productN block text-sm font-semibold">{truncatedName}</span>
 
-          {/* Pricing Information */}
-          {pricing && <span className="productP">${formattedPrice}</span>}
+      {/* Pricing Information */}
+      {pricing && <span className="productP block text-sm text-gray-600">${formattedPrice}</span>}
 
-          {/* Demo Label */}
-          {demo && <span className="demoLabel">Demo Available</span>}
-        </div>
-      </a>
+      {/* Demo Label */}
+      {demo && <span className="demoLabel block text-xs text-blue-600">Demo Available</span>}
     </div>
+  </a>
+</div>
   );
 };
 

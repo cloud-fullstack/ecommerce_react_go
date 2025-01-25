@@ -2,27 +2,41 @@ import { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import useStore from "../stores/useStore"; // Import the Zustand store
-import { BlogPost } from "../types/types"; // Import the BlogPost type
+import useStore from "../stores/useStore";
+import { BlogPost } from "../types/types";
 import apiClient from '../utils/api';
 
 const MostLovedBlogs = () => {
   const [mostLovedPictures, setMostLovedPictures] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // Allow `null` or `string`
-  const { profilePicture } = useStore(); // Access the Zustand store
+  const [error, setError] = useState<string | null>(null);
+  const { profilePicture } = useStore();
 
   // Fetch most loved blog posts
   const fetchMostLovedPictures = async () => {
     setLoading(true);
-    setError(null); // Reset error state before fetching
+    setError(null);
     try {
-      const res = await apiClient.get("/api/most-loved-recent-blogs/", {
-        method: "GET",
-      });
+      const res = await apiClient.get("/api/most-loved-recent-blogs/");
       const data = res.data;
+
+      // Ensure the data matches the BlogPost type
       if (data.error) throw new Error(data.message);
-      setMostLovedPictures(data);
+
+      // Transform the data if necessary
+      const transformedData: BlogPost[] = data.map((item: any) => ({
+        blog_post_id: item.blog_post_id,
+        store_id: item.store_id,
+        product_id: item.product_id,
+        product_name: item.product_name,
+        picture_link: item.picture_link,
+        category_id: item.category_id,
+        category_name: item.category_name,
+        author_id: item.author_id,
+        author_name: item.author_name,
+      }));
+
+      setMostLovedPictures(transformedData);
     } catch (err) {
       console.error(err);
       setError("Failed to load most loved blogs. Please try again later.");
@@ -34,7 +48,7 @@ const MostLovedBlogs = () => {
   // Fetch data on mount
   useEffect(() => {
     fetchMostLovedPictures();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   // Slider settings
   const settings = {
@@ -75,7 +89,7 @@ const MostLovedBlogs = () => {
             <p>No blogs available!</p>
           ) : (
             <Slider {...settings}>
-              {mostLovedPictures.map((pic, i) => (
+              {mostLovedPictures.map((pic: BlogPost, i: number) => (
                 <div key={i} className="px-2">
                   <a
                     href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}
@@ -118,7 +132,7 @@ const MostLovedBlogs = () => {
                             >
                               <img
                                 className="h-10 w-10 rounded-full"
-                                src={profilePicture || "https://via.placeholder.com/150"} // Fallback to a placeholder image
+                                src={profilePicture || "https://via.placeholder.com/150"}
                                 alt={pic.author_name}
                               />
                             </a>
