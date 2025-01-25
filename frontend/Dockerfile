@@ -20,9 +20,17 @@ ENV PUBLIC_URL=$PUBLIC_URL
 # Build the React app
 RUN npm run build
 
-# Serve the build folder (if needed)
-RUN npm install -g serve
-CMD ["serve", "-s", "build", "-l", "5000"]
+# Install Nginx
+RUN apt-get update && apt-get install -y nginx
 
-# Expose the port that serve will run on
-EXPOSE 5000
+# Copy the build files to the Nginx directory
+RUN mkdir -p /var/www/html && cp -r build/* /var/www/html/
+
+# Copy the Nginx configuration file
+COPY frontend/nginx.conf /etc/nginx/sites-available/default
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
