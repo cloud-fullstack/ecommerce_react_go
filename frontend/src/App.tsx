@@ -1,5 +1,5 @@
 import { useState, useEffect, CSSProperties } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom'; // Removed unused `useLocation`
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import ProductPreview from './components/ProductPreview';
@@ -16,9 +16,6 @@ function App() {
   const [cookieAccepted, setCookieAccepted] = useState(
     localStorage.getItem('cookieAccepted') === 'true'
   );
-  const location = useLocation();
-
-  console.log("location" ,location);
 
   const openModal = () => {
     setShowModal(true);
