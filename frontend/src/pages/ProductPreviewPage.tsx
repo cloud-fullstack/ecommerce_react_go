@@ -51,7 +51,7 @@ const ProductPreviewPage: React.FC = () => {
   return (
     <ProductPreview
       product_id={product.product_id}
-      product_name={product.product_name}
+      product_name={product.product_name} // Correct prop name
       store_id={product.store_id}
       picture_link={product.picture_link}
       price={product.price}

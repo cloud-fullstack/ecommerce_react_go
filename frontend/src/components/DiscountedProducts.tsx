@@ -7,12 +7,12 @@ import apiClient from '../utils/api';
 
 interface Product {
   product_id: string;
-  name: string;
-  storeID: string;
-  pictureLink: string;
+  product_name: string; // Updated to match `ProductPreviewProps`
+  store_id: string; // Updated to match `ProductPreviewProps`
+  picture_link: string; // Updated to match `ProductPreviewProps`
   price: number;
-  discountedPrice: number;
-  discountActive: boolean;
+  discounted_price: number; // Updated to match `ProductPreviewProps`
+  discounted: boolean; // Updated to match `ProductPreviewProps`
   demo?: boolean;
   pricing?: boolean;
   index?: number;
@@ -38,7 +38,21 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
       });
       const data = res.data;
       if (data.error) throw new Error(data.message);
-      setDiscountedProducts(data);
+
+      // Map the API response to match the `Product` interface
+      const formattedProducts = data.map((product: any) => ({
+        product_id: product.product_id,
+        product_name: product.name, // Map `name` to `product_name`
+        store_id: product.storeID, // Map `storeID` to `store_id`
+        picture_link: product.pictureLink, // Map `pictureLink` to `picture_link`
+        price: product.price,
+        discounted_price: product.discountedPrice, // Map `discountedPrice` to `discounted_price`
+        discounted: product.discountActive, // Map `discountActive` to `discounted`
+        demo: product.demo,
+        pricing: product.pricing,
+      }));
+
+      setDiscountedProducts(formattedProducts);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -109,12 +123,12 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
             <div key={product.product_id} className="product">
               <ProductPreview
                 product_id={product.product_id}
-                product_name={product.name}
-                store_id={product.storeID}
-                picture_link={product.pictureLink}
+                product_name={product.product_name} // Correct prop name
+                store_id={product.store_id} // Correct prop name
+                picture_link={product.picture_link} // Correct prop name
                 price={product.price}
-                discounted_price={product.discountedPrice}
-                discounted={product.discountActive}
+                discounted_price={product.discounted_price} // Correct prop name
+                discounted={product.discounted} // Correct prop name
                 demo={product.demo}
                 pricing={product.pricing}
                 index={i}
