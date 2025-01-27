@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const Footer = () => {
   const location = useLocation();
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const footerElement = document.getElementById("footerId");
@@ -20,28 +21,34 @@ const Footer = () => {
     }
   }, [location.pathname]);
 
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Subscribed with email:", email);
+    setEmail(""); // Clear the input after submission
+  };
+
   return (
-    <footer
-      className="footerGradGray py-8 px-4"
-      id="footerId"
-      aria-labelledby="footer-heading"
-    >
+    <footer className="footerGradGray" id="footerId" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="flex justify-between">
+      <div className="footer-container">
         <p>&copy; 2023 Everything SRL. All rights reserved.</p>
-        <div className="flex space-x-4">
-          <a href="#" className="text-white hover:underline">
-            Privacy Policy
-          </a>
-          <a href="#" className="text-white hover:underline">
-            Terms of Service
-          </a>
-          <a href="#" className="text-white hover:underline">
-            Contact Us
-          </a>
+        <div className="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Contact Us</a>
         </div>
+        <form onSubmit={handleSubscribe} className="subscribe-section">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button type="submit">Subscribe</button>
+        </form>
       </div>
     </footer>
   );

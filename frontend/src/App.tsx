@@ -1,9 +1,8 @@
 import { useState, useEffect, CSSProperties } from 'react';
 import { Routes, Route } from 'react-router-dom'; // Removed unused `useLocation`
-import NavBar from './components/NavBar';
+import Layout from './components/Layout'; // Import the Layout component
 import Home from './pages/Home';
 import ProductPreview from './components/ProductPreview';
-import Footer from './components/Footer';
 import AllProductPage from './pages/AllProductPage';
 import SignIn from './pages/SignIn';
 import Cart from './pages/Cart';
@@ -35,42 +34,35 @@ function App() {
   }, [showModal]);
 
   return (
-    <main>
-      <NavBar />
-      <div className="App">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                showModal={showModal}
-                openModal={openModal}
-                closeModal={closeModal}
-                cookieAccepted={cookieAccepted}
-                handleAcceptCookies={handleAcceptCookies}
-              />
-            }
-          />
-          <Route path="/signIn" element={<SignIn />} />
-          <Route path="/frontpage-product-previews" element={<AllProductPage />} />
-          <Route path="/store/:storeID/:productID" element={<ProductPreview />} />
-          <Route path="/most-loved-recent-blogs" element={<MostLovedBlogs />} />
-          <Route
-            path="/discounted-products-frontpage"
-            element={<DiscountedProducts title="Hottest Sales & Discounts" />}
-          />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-      </div>
+    <Layout> {/* Wrap everything in the Layout component */}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              showModal={showModal}
+              openModal={openModal}
+              closeModal={closeModal}
+              cookieAccepted={cookieAccepted}
+              handleAcceptCookies={handleAcceptCookies}
+            />
+          }
+        />
+        <Route path="/signIn" element={<SignIn />} />
+        <Route path="/frontpage-product-previews" element={<AllProductPage />} />
+        <Route path="/store/:storeID/:productID" element={<ProductPreview />} />
+        <Route path="/most-loved-recent-blogs" element={<MostLovedBlogs />} />
+        <Route
+          path="/discounted-products-frontpage"
+          element={<DiscountedProducts title="Hottest Sales & Discounts" />}
+        />
+        <Route path="/cart" element={<Cart />} />
+      </Routes>
 
       <button onClick={openModal}>Open Modal</button>
 
       {!cookieAccepted && <CookiePopUp onAccept={handleAcceptCookies} />}
-
-      <footer>
-        <Footer />
-      </footer>
-    </main>
+    </Layout>
   );
 }
 
