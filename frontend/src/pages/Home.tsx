@@ -1,6 +1,5 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout'; // Import the Layout component
 import DiscountedProducts from '../components/DiscountedProducts';
 import PersonalSelectionSection from '../components/PersonalSelection';
 import MostLovedBlogs from '../components/MostLovedBlogs';
@@ -22,10 +21,7 @@ const Home: React.FC<HomeProps> = ({
   handleAcceptCookies,
 }) => {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      {/* Navigation */}
-      <NavBar />
-
+    <Layout> {/* Wrap the Home content with the Layout component */}
       {/* Main Content */}
       <main className="flex-grow">
         {/* Personal Selection Section */}
@@ -38,9 +34,6 @@ const Home: React.FC<HomeProps> = ({
         <MostLovedBlogs />
       </main>
 
-      {/* Footer Section */}
-      <Footer />
-
       {/* Cookie Popup */}
       {!cookieAccepted && <CookiePopup onAccept={handleAcceptCookies} />}
 
@@ -51,7 +44,7 @@ const Home: React.FC<HomeProps> = ({
       >
         Open Modal
       </button>
-    </div>
+    </Layout>
   );
 };
 

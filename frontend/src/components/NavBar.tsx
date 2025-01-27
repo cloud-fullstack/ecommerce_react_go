@@ -22,7 +22,7 @@ const NavBar = () => {
   const [searchedProducts, setSearchedProducts] = useState<Product[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const { aviLegacyName } = useStore();
-  const menuRef = useRef<HTMLElement | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // Fetch product previews
   const fetchProductPreviews = async () => {
@@ -48,28 +48,26 @@ const NavBar = () => {
     );
   };
 
-  // Handle mobile menu outside click
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (showMobileMenu && !menuRef.current?.contains(event.target as Node)) {
-      setShowMobileMenu(false);
-    }
-  };
-
-  // Handle escape key press
-  const handleEscape = (event: KeyboardEvent) => {
-    if (showMobileMenu && event.key === "Escape") {
-      setShowMobileMenu(false);
-    }
-  };
-
-  // Add event listeners for mobile menu
+  // Handle outside click for mobile menu
   useEffect(() => {
-    document.addEventListener("click", handleOutsideClick, false);
-    document.addEventListener("keyup", handleEscape, false);
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (showMobileMenu && !menuRef.current?.contains(event.target as Node)) {
+        setShowMobileMenu(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (showMobileMenu && event.key === "Escape") {
+        setShowMobileMenu(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    document.addEventListener("keyup", handleEscape);
 
     return () => {
-      document.removeEventListener("click", handleOutsideClick, false);
-      document.removeEventListener("keyup", handleEscape, false);
+      document.removeEventListener("click", handleOutsideClick);
+      document.removeEventListener("keyup", handleEscape);
     };
   }, [showMobileMenu]);
 
@@ -84,32 +82,30 @@ const NavBar = () => {
       <img
         src="https://placehold.co/120x40"
         alt="The Rezaverse logo"
-        className="h-10 rounded-full" // Added rounded-full for elliptical form
+        className="h-10 rounded-full"
       />
 
       {/* Desktop Links */}
       <div className="hidden md:flex space-x-6">
-        <a
-          href="/"
-          onClick={() => setCurrent("Home")}
-          className={`text-gray-600 ${current === "Home" ? "font-bold" : ""}`}
-          aria-label="What's Trending"
-        >
-          What's Trending
-        </a>
-        <a
-          href="/products"
-          onClick={() => setCurrent("Products")}
-          className={`text-gray-600 ${current === "Products" ? "font-bold" : ""}`}
-          aria-label="Products"
-        >
-          Products
-        </a>
-        <a href="/#faqTarget" className="text-gray-600" aria-label="FAQ">
-          FAQ
-        </a>
+        {["Home", "Products", "FAQ"].map((link) => (
+          <a
+            key={link}
+            href={link === "FAQ" ? "/#faqTarget" : `/${link.toLowerCase()}`}
+            onClick={() => setCurrent(link)}
+            className={`text-gray-600 hover:text-gray-900 ${
+              current === link ? "font-bold" : ""
+            }`}
+            aria-label={link}
+          >
+            {link === "Home" ? "What's Trending" : link}
+          </a>
+        ))}
         {aviLegacyName && (
-          <a href="/merchant" className="text-gray-600" aria-label="Creator Dashboard">
+          <a
+            href="/merchant"
+            className="text-gray-600 hover:text-gray-900"
+            aria-label="Creator Dashboard"
+          >
             Creator Dashboard
           </a>
         )}
@@ -124,10 +120,10 @@ const NavBar = () => {
             placeholder="Search"
             value={searchProductName}
             onChange={(e) => setSearchProductName(e.target.value)}
-            className="pl-3 pr-10 py-2 border rounded-lg"
+            className="pl-3 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Search products"
           />
-          <i className="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+          <i className="fas fa-search absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
 
           {/* Search Results Dropdown */}
           {searchProductName && (
@@ -164,7 +160,7 @@ const NavBar = () => {
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setShowMobileMenu(!showMobileMenu)}
-          className="md:hidden text-gray-600"
+          className="md:hidden text-gray-600 hover:text-gray-900"
           aria-label="Toggle mobile menu"
         >
           <i className="fas fa-bars"></i>
@@ -172,51 +168,38 @@ const NavBar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div
-        ref={menuRef as React.RefObject<HTMLDivElement>}
-        className={`md:hidden absolute top-16 right-4 bg-white border rounded-lg shadow-lg z-50 transition-transform duration-300 ease-in-out ${
-          showMobileMenu ? "translate-x-0" : "translate-x-full"
-        }`}
-        role="dialog"
-        aria-modal="true"
-      >
-        <div className="space-y-2 p-4">
-          <a
-            href="/"
-            onClick={() => setShowMobileMenu(false)}
-            className="block text-gray-600"
-            aria-label="What's Trending"
-          >
-            What's Trending
-          </a>
-          <a
-            href="/products"
-            onClick={() => setShowMobileMenu(false)}
-            className="block text-gray-600"
-            aria-label="Products"
-          >
-            Products
-          </a>
-          <a
-            href="/#faqTarget"
-            onClick={() => setShowMobileMenu(false)}
-            className="block text-gray-600"
-            aria-label="FAQ"
-          >
-            FAQ
-          </a>
-          {aviLegacyName && (
-            <a
-              href="/merchant"
-              onClick={() => setShowMobileMenu(false)}
-              className="block text-gray-600"
-              aria-label="Creator Dashboard"
-            >
-              Creator Dashboard
-            </a>
-          )}
+      {showMobileMenu && (
+        <div
+          ref={menuRef}
+          className="md:hidden absolute top-16 right-4 bg-white border rounded-lg shadow-lg z-50"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="space-y-2 p-4">
+            {["Home", "Products", "FAQ"].map((link) => (
+              <a
+                key={link}
+                href={link === "FAQ" ? "/#faqTarget" : `/${link.toLowerCase()}`}
+                onClick={() => setShowMobileMenu(false)}
+                className="block text-gray-600 hover:text-gray-900"
+                aria-label={link}
+              >
+                {link === "Home" ? "What's Trending" : link}
+              </a>
+            ))}
+            {aviLegacyName && (
+              <a
+                href="/merchant"
+                onClick={() => setShowMobileMenu(false)}
+                className="block text-gray-600 hover:text-gray-900"
+                aria-label="Creator Dashboard"
+              >
+                Creator Dashboard
+              </a>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };
