@@ -84,7 +84,7 @@ const NavBar = () => {
       <img
         src="https://placehold.co/120x40"
         alt="The Rezaverse logo"
-        className="h-10"
+        className="h-10 rounded-full" // Added rounded-full for elliptical form
       />
 
       {/* Desktop Links */}
@@ -172,51 +172,51 @@ const NavBar = () => {
       </div>
 
       {/* Mobile Menu */}
-      {showMobileMenu && (
-        <div
-          ref={menuRef as React.RefObject<HTMLDivElement>}
-          className="md:hidden absolute top-16 right-4 bg-white border rounded-lg shadow-lg z-50"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="space-y-2 p-4">
+      <div
+        ref={menuRef as React.RefObject<HTMLDivElement>}
+        className={`md:hidden absolute top-16 right-4 bg-white border rounded-lg shadow-lg z-50 transition-transform duration-300 ease-in-out ${
+          showMobileMenu ? "translate-x-0" : "translate-x-full"
+        }`}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="space-y-2 p-4">
+          <a
+            href="/"
+            onClick={() => setShowMobileMenu(false)}
+            className="block text-gray-600"
+            aria-label="What's Trending"
+          >
+            What's Trending
+          </a>
+          <a
+            href="/products"
+            onClick={() => setShowMobileMenu(false)}
+            className="block text-gray-600"
+            aria-label="Products"
+          >
+            Products
+          </a>
+          <a
+            href="/#faqTarget"
+            onClick={() => setShowMobileMenu(false)}
+            className="block text-gray-600"
+            aria-label="FAQ"
+          >
+            FAQ
+          </a>
+          {aviLegacyName && (
             <a
-              href="/"
+              href="/merchant"
               onClick={() => setShowMobileMenu(false)}
               className="block text-gray-600"
-              aria-label="What's Trending"
+              aria-label="Creator Dashboard"
             >
-              What's Trending
+              Creator Dashboard
             </a>
-            <a
-              href="/products"
-              onClick={() => setShowMobileMenu(false)}
-              className="block text-gray-600"
-              aria-label="Products"
-            >
-              Products
-            </a>
-            <a
-              href="/#faqTarget"
-              onClick={() => setShowMobileMenu(false)}
-              className="block text-gray-600"
-              aria-label="FAQ"
-            >
-              FAQ
-            </a>
-            {aviLegacyName && (
-              <a
-                href="/merchant"
-                onClick={() => setShowMobileMenu(false)}
-                className="block text-gray-600"
-                aria-label="Creator Dashboard"
-              >
-                Creator Dashboard
-              </a>
-            )}
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   );
 };
