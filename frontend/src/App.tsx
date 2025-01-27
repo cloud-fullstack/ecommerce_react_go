@@ -8,6 +8,7 @@ import SignIn from './pages/SignIn';
 import Cart from './pages/Cart';
 import MostLovedBlogs from './components/MostLovedBlogs';
 import DiscountedProducts from './components/DiscountedProducts';
+import ProductPreviewPage from "./pages/ProductPreviewPage"; 
 import './App.css';
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
         />
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/frontpage-product-previews" element={<AllProductPage />} />
-        <Route path="/store/:storeID/:productID" element={<ProductPreview />} />
+        <Route path="/store/:storeID/:productID" element={<ProductPreviewPage />} />
         <Route path="/most-loved-recent-blogs" element={<MostLovedBlogs />} />
         <Route
           path="/discounted-products-frontpage"
