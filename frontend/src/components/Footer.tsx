@@ -1,33 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const Footer = () => {
-  const [currentPath, setCurrentPath] = useState("");
+  const location = useLocation();
 
-  // Update the footer based on the current path
   useEffect(() => {
-    const path = window.location.pathname;
-    setCurrentPath(path);
-
     const footerElement = document.getElementById("footerId");
     if (!footerElement) return;
 
-    // Update footer styles based on the current path
-    if (path === "/products/") {
+    if (location.pathname === "/products/") {
       footerElement.classList.remove("footerGradGray");
       footerElement.classList.add("footerGradWhite");
     }
 
-    if (path === "/signIn") {
+    if (location.pathname === "/signIn") {
       footerElement.style.display = "none";
+    } else {
+      footerElement.style.display = "block"; // Ensure footer is visible on other routes
     }
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, [location.pathname]);
 
   return (
     <footer
-      className="footerGradGray py-8 px-4" // Use the CSS class from index.css
+      className="footerGradGray py-8 px-4"
       id="footerId"
       aria-labelledby="footer-heading"
-      style={{ display: "inline" }}
     >
       <h2 id="footer-heading" className="sr-only">
         Footer

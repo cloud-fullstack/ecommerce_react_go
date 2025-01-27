@@ -194,3 +194,14 @@ a:hover {
   background: linear-gradient(to bottom, #ffffff, #f7fafc); /* Example gradient */
   color: #2d3748; /* Ensure text is dark for contrast */
 }
+
+/* Ensure the parent container takes up the full height */
+.min-h-screen {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure the main content area grows to fill the available space */
+.flex-grow {
+  flex-grow: 1;
+}
