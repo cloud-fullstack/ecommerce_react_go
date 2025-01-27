@@ -19,7 +19,7 @@ interface Product {
 }
 
 interface DiscountedProductsProps {
-  title: string; // Add a title prop
+  title: string;
 }
 
 const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
@@ -89,7 +89,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
     <div className="carouselDiv">
       <div className="text-center titleSponsorised">
         <h2 className="animate__animated animate__fadeInDown pt-5 font-bold tracking-tight carouTitle">
-          {title} {/* Use the title prop here */}
+          {title}
         </h2>
       </div>
 
