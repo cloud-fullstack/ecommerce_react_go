@@ -6,61 +6,49 @@ interface ProductPreviewProps {
   productID?: string;
   pictureLink?: string;
   price?: number;
-  discountedPrice?: number; // Expected prop name
-  discountActive?: boolean; // Expected prop name
+  discountedPrice?: number;
+  discountActive?: boolean;
   demo?: boolean;
   pricing?: boolean;
   index?: number;
+  className?: string; // Add className prop
 }
 
 const ProductPreview: React.FC<ProductPreviewProps> = ({
-  name = "Unnamed Product", // Default product name
-  storeID = "", // Default store ID
-  productID = "", // Default product ID
-  pictureLink = "https://via.placeholder.com/150", // Default placeholder image
-  price = 0, // Default price
-  discountedPrice = 0, // Default discounted price
-  discountActive = false, // Default discount status
-  demo = false, // Default demo label visibility
-  pricing = true, // Default to showing pricing
-  index, // Optional index
+  name = "Unnamed Product",
+  storeID = "",
+  productID = "",
+  pictureLink = "https://via.placeholder.com/150",
+  price = 0,
+  discountedPrice = 0,
+  discountActive = false,
+  demo = false,
+  pricing = true,
+  index,
+  className = "", // Default to empty string
 }) => {
-  // Truncate the product name if it's too long
   const truncatedName = name.length > 14 ? `${name.slice(0, 14)}..` : name;
-
-  // Calculate the real price based on whether the discount is active
   const realPrice = discountActive ? discountedPrice : price;
-
-  // Format the price to 2 decimal places
   const formattedPrice = realPrice.toFixed(2);
 
   return (
     <div className="productDisplay" key={index}>
-  <a href={storeID && productID ? `/store/${storeID}/${productID}` : "#"}>
-    {/* Product Image */}
-    <img
-      src={pictureLink}
-      alt={name}
-      className="carouselPic w-full h-48 object-cover" // Fixed height and width
-      onError={(e) => {
-        // Fallback to a placeholder image if the provided image fails to load
-        e.currentTarget.src = "https://via.placeholder.com/150";
-      }}
-    />
-
-    {/* Product Details */}
-    <div className="nameTitle mt-2 p-2 bg-white shadow-lg">
-      {/* Product Name */}
-      <span className="productN block text-sm font-semibold">{truncatedName}</span>
-
-      {/* Pricing Information */}
-      {pricing && <span className="productP block text-sm text-gray-600">${formattedPrice}</span>}
-
-      {/* Demo Label */}
-      {demo && <span className="demoLabel block text-xs text-blue-600">Demo Available</span>}
+      <a href={storeID && productID ? `/store/${storeID}/${productID}` : "#"}>
+        <img
+          src={pictureLink}
+          alt={name}
+          className={`carouselPic ${className} object-cover`} // Apply className prop
+          onError={(e) => {
+            e.currentTarget.src = "https://via.placeholder.com/150";
+          }}
+        />
+        <div className="nameTitle mt-2 p-2 bg-white shadow-lg">
+          <span className="productN block text-sm font-semibold">{truncatedName}</span>
+          {pricing && <span className="productP block text-sm text-gray-600">${formattedPrice}</span>}
+          {demo && <span className="demoLabel block text-xs text-blue-600">Demo Available</span>}
+        </div>
+      </a>
     </div>
-  </a>
-</div>
   );
 };
 

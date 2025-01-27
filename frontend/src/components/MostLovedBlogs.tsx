@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import useStore from "../stores/useStore";
 import { BlogPost } from "../types/types";
 import apiClient from '../utils/api';
+import Title from "./Title";
 
 const MostLovedBlogs = () => {
   const [mostLovedPictures, setMostLovedPictures] = useState<BlogPost[]>([]);
@@ -60,6 +61,22 @@ const MostLovedBlogs = () => {
     autoplay: true,
     autoplaySpeed: 5000,
     pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   // Render loading state
@@ -77,9 +94,7 @@ const MostLovedBlogs = () => {
       <div className="absolute inset-0 h-1/3 sm:h-2/3 bg-white"></div>
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl animate__animated animate__fadeInDown">
-            The most loved blogs
-          </h2>
+        <Title>The Most Loved Blogs</Title>
           <p className="mx-auto mt-3 max-w-2xl text-xl text-gray-500 sm:mt-4 animate__animated animate__fadeInRight animate__slow">
             A list of the most popular blogs by users
           </p>
@@ -98,7 +113,7 @@ const MostLovedBlogs = () => {
                     <div className="flex flex-col overflow-hidden rounded-lg shadow-lg cursor-pointer">
                       <div className="flex-shrink-0">
                         <img
-                          className="h-48 w-full object-cover"
+                          className="carouselPic w-full h-48 object-cover" // Use the same class as ProductPreview
                           src={pic.picture_link}
                           alt={`Banner for ${pic.product_name}`}
                         />

@@ -24,7 +24,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="footerGradGray"
+      className="footerGradGray py-8 px-4" // Use the CSS class from index.css
       id="footerId"
       aria-labelledby="footer-heading"
       style={{ display: "inline" }}
@@ -32,9 +32,18 @@ const Footer = () => {
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          {/* Footer content goes here */}
+      <div className="flex justify-between">
+        <p>&copy; 2023 Everything SRL. All rights reserved.</p>
+        <div className="flex space-x-4">
+          <a href="#" className="text-white hover:underline">
+            Privacy Policy
+          </a>
+          <a href="#" className="text-white hover:underline">
+            Terms of Service
+          </a>
+          <a href="#" className="text-white hover:underline">
+            Contact Us
+          </a>
         </div>
       </div>
     </footer>
