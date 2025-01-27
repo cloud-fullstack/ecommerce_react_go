@@ -26,8 +26,23 @@ const ProductPreviewPage: React.FC = () => {
       try {
         const res = await apiClient.get(`/api/store/${storeID}/${productID}`);
         const data = res.data;
+
         if (data.error) throw new Error(data.message);
-        setProduct(data);
+
+        // Map the API response to match the `Product` interface
+        const formattedProduct = {
+          product_id: data.product_id,
+          product_name: data.product_name || data.name, // Map `name` to `product_name`
+          store_id: data.store_id || data.storeID, // Map `storeID` to `store_id`
+          picture_link: data.picture_link || data.pictureLink, // Map `pictureLink` to `picture_link`
+          price: data.price,
+          discounted_price: data.discounted_price || data.discountedPrice, // Map `discountedPrice` to `discounted_price`
+          discounted: data.discounted || data.discountActive, // Map `discountActive` to `discounted`
+          demo: data.demo,
+          pricing: data.pricing,
+        };
+
+        setProduct(formattedProduct);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
