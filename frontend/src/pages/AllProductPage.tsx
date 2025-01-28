@@ -142,13 +142,13 @@ const Products = () => {
                 searchFilterCategory(listOfProducts, searchProductName, selectedFilter).map((product, index) => (
                   <ProductPreview
                     key={product.product_id}
-                    productID={product.product_id}
-                    storeID={product.store_id}
-                    name={product.product_name}
-                    pictureLink={product.picture_link}
+                    product_id={product.product_id}
+                    store_id={product.store_id}
+                    product_name={product.product_name}
+                    picture_link={product.picture_link}
                     price={product.price}
-                    discountedPrice={product.discounted_price || product.price} // Correct prop name
-                    discountActive={product.discounted} // Correct prop name
+                    discounted_price={product.discounted_price || product.price} // Correct prop name
+                    discounted={product.discounted??false} // Correct prop name
                     index={index}
                   />
                 ))

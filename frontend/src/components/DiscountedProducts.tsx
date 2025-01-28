@@ -14,10 +14,12 @@ interface Product {
   price: number;
   discounted_price: number;
   discounted: boolean;
+  demo?: boolean;
+  pricing?: boolean;
 }
 
 interface DiscountedProductsProps {
-  title: string; // Add a title prop
+  title: string;
 }
 
 const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
@@ -36,7 +38,21 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
       });
       const data = res.data;
       if (data.error) throw new Error(data.message);
-      setDiscountedProducts(data);
+
+      // Map the API response to match the `Product` interface
+      const formattedProducts = data.map((product: any) => ({
+        product_id: product.product_id,
+        product_name: product.name, // Map `name` to `product_name`
+        store_id: product.storeID, // Map `storeID` to `store_id`
+        picture_link: product.pictureLink, // Map `pictureLink` to `picture_link`
+        price: product.price,
+        discounted_price: product.discountedPrice, // Map `discountedPrice` to `discounted_price`
+        discounted: product.discountActive, // Map `discountActive` to `discounted`
+        demo: product.demo,
+        pricing: product.pricing,
+      }));
+
+      setDiscountedProducts(formattedProducts);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -87,6 +103,9 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
     <div className="carouselDiv">
       <div className="text-center titleSponsorised">
         <Title>{title}</Title>
+        <h2 className="animate__animated animate__fadeInDown pt-5 font-bold tracking-tight carouTitle">
+          {title}
+        </h2>
       </div>
 
       {discountedProducts.length > 0 ? (
@@ -101,25 +120,23 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
           centerMode
           centerSlidePercentage={100 / numberOfCart}
         >
-          {discountedProducts.map((product, i) => {
-            const productProps = {
-              name: product.product_name,
-              storeID: product.store_id,
-              productID: product.product_id,
-              pictureLink: product.picture_link,
-              price: product.price,
-              discountedPrice: product.discounted_price,
-              discountActive: product.discounted,
-              index: i,
-              className: "w-32 h-32 sm:w-48 sm:h-48", // Pass responsive dimensions
-            };
-
-            return (
-              <div key={product.product_id} className="product">
-                <ProductPreview {...productProps} />
-              </div>
-            );
-          })}
+          {discountedProducts.map((product, i) => (
+            <div key={product.product_id} className="product">
+              <ProductPreview
+                product_id={product.product_id}
+                product_name={product.product_name}
+                store_id={product.store_id}
+                picture_link={product.picture_link}
+                price={product.price}
+                discounted_price={product.discounted_price}
+                discounted={product.discounted}
+                demo={product.demo}
+                pricing={product.pricing}
+                index={i}
+                className="w-32 h-32 sm:w-48 sm:h-48" // Pass responsive dimensions
+              />
+            </div>
+          ))}
         </Carousel>
       ) : (
         <p>No products available!</p>
