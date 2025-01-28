@@ -109,6 +109,59 @@ a:hover {
   display: none;
 }
 
+.carousel-inner .item {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carousel-inner .item img {
+  width: 100%;
+  height: auto;
+}
+
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 16px 0;
+}
+
+.image-item {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  border-radius: 8px;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-container {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+
+
+
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .carouselPic {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .carouselPic {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 767px) {
   .carouselPic {
@@ -141,16 +194,14 @@ a:hover {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin: 0.5rem; /* Add some margin */
+  margin: 0.5rem;
 }
 
-/* Product name */
 .productN {
-  font-size: 1rem; /* Adjust font size */
-  font-weight: 600; /* Bold text */
-  color: #333; /* Dark text color */
-  margin-bottom: 0.25rem; /* Add spacing */
+  font-size: 1rem;
+  font-weight: 600;
 }
+
 
 /* Product price */
 .productP {

@@ -54,6 +54,7 @@ yarn-error.log*
 
 
 /frontend/build/
+/figma-JS/
 
 
 # IDE specific files
