@@ -42,12 +42,12 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
       // Map the API response to match the `Product` interface
       const formattedProducts = data.map((product: any) => ({
         product_id: product.product_id,
-        product_name: product.product_name, // Correct mapping
-        store_id: product.store_id, // Correct mapping
-        picture_link: product.picture_link, // Correct mapping
+        product_name: product.product_name,
+        store_id: product.store_id,
+        picture_link: product.picture_link,
         price: product.price,
-        discounted_price: product.discounted_price, // Correct mapping
-        discounted: product.discounted, // Correct mapping
+        discounted_price: product.discounted_price,
+        discounted: product.discounted,
         demo: product.demo,
         pricing: product.pricing,
       }));
@@ -102,7 +102,6 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
   return (
     <div className="carouselDiv">
       <div className="text-center titleSponsorised">
-        <Title>{title}</Title>
         <h2 className="animate__animated animate__fadeInDown pt-5 font-bold tracking-tight carouTitle">
           {title}
         </h2>
@@ -133,7 +132,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
                 demo={product.demo}
                 pricing={product.pricing}
                 index={i}
-                className="w-32 h-32 sm:w-48 sm:h-48" // Pass responsive dimensions
+                className="w-full h-48 sm:w-48 sm:h-48 object-cover" // Ensure images cover the area
               />
             </div>
           ))}

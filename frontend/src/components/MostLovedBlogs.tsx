@@ -90,11 +90,11 @@ const MostLovedBlogs = () => {
   }
 
   return (
-    <div className="relative px-4 pt-16 pb-20 sm:px-6 lg:px-8 lg:pt-24 lg:pb-28 bg-[#4f2236]">
+    <div className="most-loved-blogs relative px-4 pt-16 pb-20 sm:px-6 lg:px-8 lg:pt-24 lg:pb-28">
       <div className="absolute inset-0 h-1/3 sm:h-2/3 bg-white"></div>
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
-        <Title>The Most Loved Blogs</Title>
+          <Title>The Most Loved Blogs</Title>
           <p className="mx-auto mt-3 max-w-2xl text-xl text-gray-500 sm:mt-4 animate__animated animate__fadeInRight animate__slow">
             A list of the most popular blogs by users
           </p>

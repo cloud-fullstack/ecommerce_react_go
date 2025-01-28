@@ -155,6 +155,39 @@
   height: auto;
 }
 
+/* discounted prod */
+
+
+/* General styles for sections */
+/* General styles for sections */
+.carouselDiv {
+  margin-bottom: 1rem; /* Adjust this value to reduce space */
+}
+
+.relative {
+  margin-bottom: 1rem; /* Adjust this value to reduce space */
+}
+
+
+/* Most Loved Blogs Section */
+/* Most Loved Blogs Section */
+.most-loved-blogs {
+  background-color: #84224e; /* Set the background color */
+  padding-top: 2rem; /* Adjust this value to reduce space */
+  padding-bottom: 2rem; /* Adjust this value to reduce space */
+}
+
+/* Personal Selection Section */
+.personal-selection {
+  margin-bottom: 1rem; /* Adjust this value to reduce space */
+}
+
+/* Add any other specific styles for your sections as needed */
+
+/* Add any other specific styles for your sections as needed */
+ 
+
+
 .scroll-container {
   display: flex;
   overflow-x: auto;

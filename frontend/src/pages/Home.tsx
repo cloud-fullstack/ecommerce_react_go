@@ -13,13 +13,11 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({
-   cookieAccepted,
+  cookieAccepted,
   handleAcceptCookies,
 }) => {
   return (
     <div className="min-h-screen bg-white">
-    
-
       {/* Personal Selection Section */}
       <PersonalSelectionSection />
 
@@ -28,11 +26,6 @@ const Home: React.FC<HomeProps> = ({
 
       {/* Most Loved Blogs Section */}
       <MostLovedBlogs /> {/* Use the MostLovedBlogs component here */}
-
-    
-
-      {/* Modal Button */}
-    
 
       {/* Cookie Popup */}
       {!cookieAccepted && (
