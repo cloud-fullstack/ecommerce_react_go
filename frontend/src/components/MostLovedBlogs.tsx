@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useStore from "../stores/useStore";
 import { BlogPost } from "../types/types";
-import apiClient from '../utils/api';
+import apiClient from "../utils/api";
 import Title from "./Title";
 
 const MostLovedBlogs = () => {
@@ -21,21 +21,22 @@ const MostLovedBlogs = () => {
       const res = await apiClient.get("/api/most-loved-recent-blogs/");
       const data = res.data;
 
-      // Ensure the data matches the BlogPost type
       if (data.error) throw new Error(data.message);
 
-      // Transform the data if necessary
-      const transformedData: BlogPost[] = data.map((item: any) => ({
-        blog_post_id: item.blog_post_id,
-        store_id: item.store_id,
-        product_id: item.product_id,
-        product_name: item.product_name,
-        picture_link: item.picture_link,
-        category_id: item.category_id,
-        category_name: item.category_name,
-        author_id: item.author_id,
-        author_name: item.author_name,
-      }));
+      // Transform the data and filter invalid entries
+      const transformedData: BlogPost[] = data
+        .map((item: any) => ({
+          blog_post_id: item.blog_post_id,
+          store_id: item.store_id,
+          product_id: item.product_id,
+          product_name: item.product_name,
+          picture_link: item.picture_link,
+          category_id: item.category_id,
+          category_name: item.category_name,
+          author_id: item.author_id,
+          author_name: item.author_name,
+        }))
+        .filter((item) => item.picture_link && item.picture_link.trim() !== ""); // Filter out invalid picture links
 
       setMostLovedPictures(transformedData);
     } catch (err) {
@@ -57,10 +58,10 @@ const MostLovedBlogs = () => {
   // Slider settings
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: mostLovedPictures.length > 3, // Only enable infinite scroll if there are more than 3 items
     speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToShow: Math.min(3, mostLovedPictures.length), // Adapt slides to available items
+    slidesToScroll: Math.min(3, mostLovedPictures.length),
     autoplay: true,
     autoplaySpeed: 5000,
     pauseOnHover: true,
@@ -68,15 +69,15 @@ const MostLovedBlogs = () => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToShow: Math.min(2, mostLovedPictures.length),
+          slidesToScroll: Math.min(2, mostLovedPictures.length),
         },
       },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+          slidesToShow: Math.min(1, mostLovedPictures.length),
+          slidesToScroll: Math.min(1, mostLovedPictures.length),
         },
       },
     ],
@@ -107,8 +108,8 @@ const MostLovedBlogs = () => {
             <p>No blogs available!</p>
           ) : (
             <Slider {...settings}>
-              {mostLovedPictures.map((pic: BlogPost, i: number) => (
-                <div key={i} className="px-2">
+              {mostLovedPictures.map((pic: BlogPost) => (
+                <div key={pic.blog_post_id} className="px-2">
                   <a
                     href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}
                     aria-label={`View blog post for ${pic.product_name}`}
@@ -116,45 +117,41 @@ const MostLovedBlogs = () => {
                     <div className="flex flex-col overflow-hidden rounded-lg shadow-lg cursor-pointer">
                       <div className="flex-shrink-0">
                         <img
-                          className="carouselPic w-full h-48 object-cover" // Use the same class as ProductPreview
-                          src={pic.picture_link}
+                          className="carouselPic w-full h-48 object-cover"
+                          src={pic.picture_link || "/default-placeholder.png"} // Fallback for missing images
                           alt={`Banner for ${pic.product_name}`}
                         />
                       </div>
-                      <div className="flex flex-1 flex-col justify-between bg-white p-6">
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-indigo-600">
-                            <a
-                              href={`/category/${pic.category_id}`}
-                              className="hover:underline"
-                              aria-label={`View category ${pic.category_name}`}
-                            >
-                              {pic.category_name}
-                            </a>
-                          </p>
+                      <div className="flex-1 bg-white p-6">
+                        <p className="text-sm font-medium text-indigo-600">
                           <a
-                            href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}
-                            className="mt-2 block"
-                            aria-label={`View product ${pic.product_name}`}
+                            href={`/category/${pic.category_id}`}
+                            className="hover:underline"
+                            aria-label={`View category ${pic.category_name}`}
                           >
-                            <p className="text-xl font-semibold text-gray-900">
-                              {pic.product_name}
-                            </p>
+                            {pic.category_name}
                           </a>
-                        </div>
+                        </p>
+                        <a
+                          href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}
+                          className="mt-2 block"
+                          aria-label={`View product ${pic.product_name}`}
+                        >
+                          <p className="text-xl font-semibold text-gray-900">
+                            {pic.product_name}
+                          </p>
+                        </a>
                         <div className="mt-6 flex items-center">
-                          <div className="flex-shrink-0">
-                            <a
-                              href={`/blog/${pic.blog_post_id}/`}
-                              aria-label={`View blog post by ${pic.author_name}`}
-                            >
-                              <img
-                                className="h-10 w-10 rounded-full"
-                                src={profilePicture || ""}
-                                alt={`Profile picture of ${pic.author_name}`}
-                              />
-                            </a>
-                          </div>
+                          <a
+                            href={`/blog/${pic.blog_post_id}/`}
+                            aria-label={`View blog post by ${pic.author_name}`}
+                          >
+                            <img
+                              className="h-10 w-10 rounded-full"
+                              src={profilePicture || "/default-profile.png"} // Fallback for missing profile images
+                              alt={`Profile picture of ${pic.author_name}`}
+                            />
+                          </a>
                           <div className="ml-3">
                             <p className="text-sm font-medium text-gray-900">
                               <a
