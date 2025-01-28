@@ -146,38 +146,26 @@
 
 .carousel-inner .item {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .carousel-inner .item img {
-  width: 100%;
-  height: auto;
+  width: 100%; /* Ensures images stretch to the container's width */
+  height: 200px; /* Consistent height for all images */
+  object-fit: cover; /* Maintains aspect ratio and prevents white space */
+  border-radius: 8px; /* Optional: For rounded corners */
 }
-
-/* discounted prod */
-
 
 /* General styles for sections */
 /* General styles for sections */
 .carouselDiv {
   margin-bottom: 1rem;
-}
-
-.relative {
-  margin-bottom: 1rem;
-}
-
-.most-loved-blogs.slick-slide > div {
-  padding: 0 5px;
-}
-
-.most-loved-blogs.slick-list {
-  margin: 0 -5px;
-}
-
-.personal-selection {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .scroll-container {
@@ -207,8 +195,10 @@
 @media (min-width: 768px) and (max-width: 1023px) {
   .carouselPic {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 200px; /* Ensure consistent height */
+    object-fit: cover; /* Prevent white spaces and keep aspect ratio */
+    border-radius: 8px;
+    background-color: #e2e8f0;
   }
 }
 
@@ -216,6 +206,8 @@
   .carouselPic {
     width: 200px;
     height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
   }
 }
 
@@ -231,6 +223,24 @@
   width: 100%;
   height: auto;
 }
+
+.relative {
+  margin-bottom: 1rem;
+}
+
+.most-loved-blogs.slick-slide > div {
+  padding: 0 5px;
+}
+
+.most-loved-blogs.slick-list {
+  margin: 0 -5px;
+}
+
+.personal-selection {
+  margin-bottom: 1rem;
+}
+
+
 
 
 @media (max-width: 767px) {
@@ -275,30 +285,64 @@
 }
 
 /* ProductPreview container */
+/* ProductPreview container */
 .productDisplay {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* Center the content */
   text-align: center;
   margin: 0.5rem;
+  padding: 0.5rem;
+  background-color: #fff; /* Add background to separate each product visually */
+  border-radius: 8px; /* Slightly rounded corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: transform 0.2s ease-in-out; /* Smooth scaling on hover */
 }
 
+.productDisplay:hover {
+  transform: scale(1.03); /* Slight zoom effect on hover */
+}
+
+/* Product name */
 .productN {
   font-size: 1rem;
   font-weight: 600;
+  margin-top: 0.5rem; /* Add spacing between the name and image */
+  color: #333; /* Darker color for better readability */
+  text-overflow: ellipsis; /* Handle overflow gracefully */
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Ensure truncation */
+  max-width: 150px; /* Limit the width for consistent truncation */
 }
 
 /* Product price */
 .productP {
-  font-size: 0.875rem; /* Adjust font size */
-  color: #666; /* Gray text color */
+  font-size: 0.875rem; /* Match text size with design */
+  color: #16a34a; /* Green for discounted price */
+  margin-top: 0.25rem; /* Spacing below the name */
+  font-weight: 500;
+}
+
+/* Product image */
+.carouselPic {
+  width: 100%;
+  height: 200px; /* Set a consistent height */
+  object-fit: cover; /* Ensure images scale and crop uniformly */
+  border-radius: 8px; /* Match the container's border radius */
+  background-color: #f3f4f6; /* Light gray fallback for missing images */
+  transition: opacity 0.3s ease; /* Smooth fade effect on hover */
+}
+
+.carouselPic:hover {
+  opacity: 0.9; /* Slight fade effect when hovering */
 }
 
 /* Demo label */
 .demoLabel {
-  font-size: 0.75rem; /* Adjust font size */
-  color: #3b82f6; /* Blue text color */
-  margin-top: 0.25rem; /* Add spacing */
+  font-size: 0.75rem; /* Smaller text size */
+  color: #3b82f6; /* Blue for demo labels */
+  margin-top: 0.25rem; /* Add spacing above the label */
 }
 
 /* Arrow animation */

@@ -42,28 +42,42 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
   const formattedPrice = realPrice.toFixed(2);
 
   return (
-    <div className={`productDisplay ${className}`} key={index}>
-      <a href={store_id && product_id ? `/store/${store_id}/${product_id}` : "#"}>
+    <div
+      className={`productDisplay ${className} flex flex-col items-center justify-center p-2`}
+      key={index}
+    >
+      <a
+        href={store_id && product_id ? `/store/${store_id}/${product_id}` : "#"}
+        className="flex flex-col items-center"
+      >
         {/* Product Image */}
         <img
           src={picture_link}
           alt={product_name}
-          className="carouselPic aspect-h-1 w-full overflow-hidden bg-gray-200 group-hover:opacity-75 lg:aspect-none"
+          className="carouselPic w-full h-48 object-cover rounded-lg bg-gray-200"
           onError={(e) => {
-            e.currentTarget.src = "https://via.placeholder.com/150"; // Fallback to a placeholder image
+            e.currentTarget.src = ""; // Fallback to a placeholder image
           }}
         />
 
         {/* Product Details */}
-        <div className="nameTitle aspect-h-1 w-full overflow-hidden bg-gray-200 group-hover:opacity-75 lg:aspect-none shadow-lg">
+        <div className="nameTitle w-full text-center mt-2">
           {/* Product Name */}
-          <span className="productN">{truncatedName}</span>
+          <span className="productN block font-bold text-sm">{truncatedName}</span>
 
           {/* Pricing Information */}
-          {pricing && <span className="productP">${formattedPrice}</span>}
+          {pricing && (
+            <span className="productP block text-green-600 text-sm">
+              ${formattedPrice}
+            </span>
+          )}
 
           {/* Demo Label */}
-          {demo && <span className="demoLabel">Demo Available</span>}
+          {demo && (
+            <span className="demoLabel block text-xs text-blue-500 mt-1">
+              Demo Available
+            </span>
+          )}
         </div>
       </a>
     </div>
