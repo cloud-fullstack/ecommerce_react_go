@@ -118,7 +118,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
           showIndicators={false}
           centerMode
           centerSlidePercentage={100 / numberOfCart}
-          additionalTransitions={0} // Add this line to reduce transition effect
+         
         >
           {discountedProducts.map((product, i) => (
             <div key={product.product_id} className="product">
