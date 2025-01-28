@@ -171,10 +171,12 @@
 
 /* Most Loved Blogs Section */
 /* Most Loved Blogs Section */
-.most-loved-blogs {
-  background-color: #84224e; /* Set the background color */
-  padding-top: 2rem; /* Adjust this value to reduce space */
-  padding-bottom: 2rem; /* Adjust this value to reduce space */
+.most-loved-blogs .slick-slide > div {
+  padding: 0 10px; /* Adjust padding as needed */
+}
+
+.most-loved-blogs .slick-list {
+  margin: 0 -10px; /* Adjust margin to counteract the padding */
 }
 
 /* Personal Selection Section */
@@ -215,8 +217,9 @@
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .carouselPic {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: 200px; /* Adjust this value as needed */
+    object-fit: cover; /* Ensures the image covers the area without stretching */
   }
 }
 
