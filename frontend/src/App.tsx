@@ -50,7 +50,7 @@ function App() {
           }
         />
         <Route path="/signIn" element={<SignIn />} />
-        <Route path="/frontpage-product-previews" element={<AllProductPage />} />
+        <Route path="/products" element={<AllProductPage />} />
         <Route path="/store/:storeID/:productID" element={<ProductPreviewPage />} />
         <Route path="/most-loved-recent-blogs" element={<MostLovedBlogs />} />
         <Route
