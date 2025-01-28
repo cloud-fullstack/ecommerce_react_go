@@ -52,7 +52,7 @@ const MostLovedBlogs = () => {
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
     pauseOnHover: true,
@@ -61,7 +61,7 @@ const MostLovedBlogs = () => {
         breakpoint: 1024,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToScroll: 1,
         },
       },
       {
@@ -103,7 +103,7 @@ const MostLovedBlogs = () => {
                     href={`/store/${pic.store_id}/${pic.product_id}#blog=${pic.blog_post_id}`}
                     aria-label={`View blog post for ${pic.product_name}`}
                   >
-                    <div className="flex flex-col overflow-hidden rounded-lg shadow-lg cursor-pointer">
+                    <div className="flex flex-col overflow-hidden rounded-lg cursor-pointer">
                       <div className="flex-shrink-0">
                         <img
                           className="carouselPic w-full h-48 object-cover"
