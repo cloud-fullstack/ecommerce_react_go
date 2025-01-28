@@ -1,6 +1,4 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
-import Footer from '../components/Footer';
 import DiscountedProducts from '../components/DiscountedProducts';
 import PersonalSelectionSection from '../components/PersonalSelection';
 import MostLovedBlogs from '../components/MostLovedBlogs'; // Import the MostLovedBlogs component
@@ -15,10 +13,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({
-  showModal,
-  openModal,
-  closeModal,
-  cookieAccepted,
+   cookieAccepted,
   handleAcceptCookies,
 }) => {
   return (
@@ -37,9 +32,7 @@ const Home: React.FC<HomeProps> = ({
     
 
       {/* Modal Button */}
-      <button onClick={openModal} className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg">
-        Open Modal
-      </button>
+    
 
       {/* Cookie Popup */}
       {!cookieAccepted && (
