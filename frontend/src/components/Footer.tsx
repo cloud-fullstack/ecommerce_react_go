@@ -35,9 +35,9 @@ const Footer = () => {
       <div className="footer-container">
         <p>&copy; 2023 Everything SRL. All rights reserved.</p>
         <div className="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact Us</a>
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms-of-service">Terms of Service</a>
+          <a href="/contact-us">Contact Us</a>
         </div>
         <form onSubmit={handleSubscribe} className="subscribe-section">
           <input
