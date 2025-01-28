@@ -38,20 +38,20 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
       });
       const data = res.data;
       if (data.error) throw new Error(data.message);
-
+  
       // Map the API response to match the `Product` interface
       const formattedProducts = data.map((product: any) => ({
         product_id: product.product_id,
-        product_name: product.name, // Map `name` to `product_name`
-        store_id: product.storeID, // Map `storeID` to `store_id`
-        picture_link: product.pictureLink, // Map `pictureLink` to `picture_link`
+        product_name: product.product_name, // Correct mapping
+        store_id: product.store_id, // Correct mapping
+        picture_link: product.picture_link, // Correct mapping
         price: product.price,
-        discounted_price: product.discountedPrice, // Map `discountedPrice` to `discounted_price`
-        discounted: product.discountActive, // Map `discountActive` to `discounted`
+        discounted_price: product.discounted_price, // Correct mapping
+        discounted: product.discounted, // Correct mapping
         demo: product.demo,
         pricing: product.pricing,
       }));
-
+  
       setDiscountedProducts(formattedProducts);
     } catch (err) {
       if (err instanceof Error) {
