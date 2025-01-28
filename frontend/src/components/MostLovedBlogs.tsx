@@ -147,7 +147,7 @@ const MostLovedBlogs = () => {
                             >
                               <img
                                 className="h-10 w-10 rounded-full"
-                                src={profilePicture || "https://via.placeholder.com/150"}
+                                src={profilePicture || ""}
                                 alt={pic.author_name}
                               />
                             </a>

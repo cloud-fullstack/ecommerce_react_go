@@ -23,8 +23,7 @@ const Home: React.FC<HomeProps> = ({
 }) => {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <NavBar />
+    
 
       {/* Personal Selection Section */}
       <PersonalSelectionSection />
@@ -35,8 +34,7 @@ const Home: React.FC<HomeProps> = ({
       {/* Most Loved Blogs Section */}
       <MostLovedBlogs /> {/* Use the MostLovedBlogs component here */}
 
-      {/* Footer Section */}
-      <Footer />
+    
 
       {/* Modal Button */}
       <button onClick={openModal} className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg">

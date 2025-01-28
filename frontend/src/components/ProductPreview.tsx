@@ -18,7 +18,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
   name = "Unnamed Product",
   storeID = "",
   productID = "",
-  pictureLink = "https://via.placeholder.com/150",
+  pictureLink = "",
   price = 0,
   discountedPrice = 0,
   discountActive = false,
@@ -39,7 +39,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
           alt={name}
           className={`carouselPic ${className} object-cover`} // Apply className prop
           onError={(e) => {
-            e.currentTarget.src = "https://via.placeholder.com/150";
+            e.currentTarget.src = "";
           }}
         />
         <div className="nameTitle mt-2 p-2 bg-white shadow-lg">
