@@ -39,8 +39,11 @@ const MostLovedBlogs = () => {
 
       setMostLovedPictures(transformedData);
     } catch (err) {
-      console.error(err);
-      setError("Failed to load most loved blogs. Please try again later.");
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to load most loved blogs. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -126,7 +129,7 @@ const MostLovedBlogs = () => {
                               className="hover:underline"
                               aria-label={`View category ${pic.category_name}`}
                             >
-                              Category
+                              {pic.category_name}
                             </a>
                           </p>
                           <a
@@ -148,7 +151,7 @@ const MostLovedBlogs = () => {
                               <img
                                 className="h-10 w-10 rounded-full"
                                 src={profilePicture || ""}
-                                alt={pic.author_name}
+                                alt={`Profile picture of ${pic.author_name}`}
                               />
                             </a>
                           </div>
