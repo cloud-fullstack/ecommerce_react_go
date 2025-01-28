@@ -220,6 +220,19 @@
 }
 
 
+/*  discounted   */
+
+.carousel-inner.item {
+  display: flex;
+  align-items: center;
+}
+
+.carousel-inner.item img {
+  width: 100%;
+  height: auto;
+}
+
+
 @media (max-width: 767px) {
   .containerBorder {
     width: 90%;

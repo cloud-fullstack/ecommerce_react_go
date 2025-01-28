@@ -38,7 +38,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
       });
       const data = res.data;
       if (data.error) throw new Error(data.message);
-  
+
       // Map the API response to match the `Product` interface
       const formattedProducts = data.map((product: any) => ({
         product_id: product.product_id,
@@ -51,7 +51,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
         demo: product.demo,
         pricing: product.pricing,
       }));
-  
+
       setDiscountedProducts(formattedProducts);
     } catch (err) {
       if (err instanceof Error) {
@@ -118,6 +118,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
           showIndicators={false}
           centerMode
           centerSlidePercentage={100 / numberOfCart}
+          additionalTransitions={0} // Add this line to reduce transition effect
         >
           {discountedProducts.map((product, i) => (
             <div key={product.product_id} className="product">
@@ -132,7 +133,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
                 demo={product.demo}
                 pricing={product.pricing}
                 index={i}
-                className="w-full h-48 sm:w-48 sm:h-48 object-cover" // Ensure images cover the area
+                className="w-full h-48 sm:h-48 object-cover" // Ensure images cover the area
               />
             </div>
           ))}
@@ -142,7 +143,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
       )}
 
       <div className="showArrow">
-        <a href="/#blogsTarget">
+        <button onClick={() => window.scrollTo(0, 0)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -157,7 +158,7 @@ const DiscountedProducts: React.FC<DiscountedProductsProps> = ({ title }) => {
               d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5"
             />
           </svg>
-        </a>
+        </button>
       </div>
     </div>
   );
