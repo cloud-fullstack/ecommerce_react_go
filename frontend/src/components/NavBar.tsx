@@ -135,13 +135,13 @@ const NavBar = () => {
                   {searchNavbarFilter(searchedProducts, searchProductName).map((product) => (
                     <li key={product.product_id} className="p-2 hover:bg-gray-100">
                       <ProductPreview
-                        name={product.product_name}
-                        storeID={product.store_id}
-                        productID={product.product_id}
-                        pictureLink={product.picture_link}
+                        product_name={product.product_name}
+                        store_id={product.store_id}
+                        product_id={product.product_id}
+                        picture_link={product.picture_link}
                         price={product.price}
-                        discountedPrice={product.discounted_price}
-                        discountActive={product.discounted}
+                        discounted_price={product.discounted_price}
+                        discounted={product.discounted}
                       />
                     </li>
                   ))}
