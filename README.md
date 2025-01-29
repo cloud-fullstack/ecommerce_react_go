@@ -70,7 +70,7 @@ Excerpt of full-stack e-commerce platform [demo featuring a Go backend with Gin,
    export DB_SSLMODE=require
    export SPACES_ACCESS_KEY=your_aws_key
    export SPACES_SECRET_KEY=your_aws_secret
-   export REACT_APP_DOMAIN_NAME=https://yourfrontend.com
+   export BACKEND_APP_DOMAIN_NAME=https://yourbackend.com
    ```
 3. Run the backend:
    ```sh
