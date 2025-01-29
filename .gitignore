@@ -10,7 +10,7 @@ backend/vendor/
 !go.sum
 !main.go
 !config.sh
-!backend/.env
+backend/.env
 
 
 
